@@ -2,87 +2,18 @@ import React, { useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { IoBusinessOutline } from "react-icons/io5";
 import { CiLogin, CiGlobe, CiUser } from "react-icons/ci";
+import { navbarTexts } from '../../translations/navbarTexts';
 
 const Navbar: React.FC = () => {
-    const navigate = useNavigate();
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [language, setLanguage] = useState<'PT' | 'EN'>('PT');
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [language, setLanguage] = useState<'PT' | 'EN'>('PT');
 
-    const handleRedirect = () => {
-        navigate('/signup');
-    };
+  const handleRedirect = () => navigate('#');
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleLanguage = () => setLanguage(prev => (prev === 'PT' ? 'EN' : 'PT'));
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
-
-    const toggleLanguage = () => {
-        setLanguage(prev => prev === 'PT' ? 'EN' : 'PT');
-    };
-
-    // Textos em ambos os idiomas
-    const texts = {
-        PT: {
-            // Menu principal
-            personal: "Particulares",
-            business: "Empresas",
-            private: "Private Banking",
-            about: "Sobre Nós",
-
-            // Submenu Particulares
-            accounts: "Contas",
-            cards: "Cartões",
-            loans: "Créditos",
-            investments: "Investimentos",
-            insurance: "Seguros",
-            digital: "Banca Digital",
-
-            // Submenu Empresas
-            businessAccounts: "Contas Empresariais",
-            businessLoans: "Financiamento",
-            treasury: "Tesouraria",
-            trade: "Comércio Internacional",
-            cardsBusiness: "Cartões Empresariais",
-
-            // Ações
-            login: "Área Cliente",
-            signup: "Abrir Conta",
-            simulator: "Simulador",
-            contact: "Contactos",
-            company: "Vista Bank"
-        },
-        EN: {
-            // Menu principal
-            personal: "Personal",
-            business: "Business",
-            private: "Private Banking",
-            about: "About Us",
-
-            // Submenu Personal
-            accounts: "Accounts",
-            cards: "Cards",
-            loans: "Loans",
-            investments: "Investments",
-            insurance: "Insurance",
-            digital: "Digital Banking",
-
-            // Submenu Business
-            businessAccounts: "Business Accounts",
-            businessLoans: "Financing",
-            treasury: "Treasury",
-            trade: "International Trade",
-            cardsBusiness: "Business Cards",
-
-            // Ações
-            login: "Online Banking",
-            signup: "Open Account",
-            simulator: "Simulator",
-            contact: "Contact",
-            company: "Vista Bank"
-        }
-    };
-
-    const currentTexts = texts[language];
+  const currentTexts = navbarTexts[language];
 
     return (
         <>
@@ -98,7 +29,7 @@ const Navbar: React.FC = () => {
                                 <CiGlobe size={14} />
                                 <span className="font-medium">{language}</span>
                             </button>
-                            <NavLink to="/login" className="text-gray-600 hover:text-red-600 transition-colors duration-300">
+                            <NavLink to="#" className="text-gray-600 hover:text-red-600 transition-colors duration-300">
                                 {currentTexts.login}
                             </NavLink>
                         </div>
@@ -132,22 +63,22 @@ const Navbar: React.FC = () => {
                                     </button>
                                     <div className="absolute left-0 mt-2 w-64 bg-white shadow-2xl border border-gray-200 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                                         <div className="py-2">
-                                            <NavLink to="/particulares/contas" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.accounts}
                                             </NavLink>
-                                            <NavLink to="/particulares/cartoes" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.cards}
                                             </NavLink>
-                                            <NavLink to="/particulares/creditos" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.loans}
                                             </NavLink>
-                                            <NavLink to="/particulares/investimentos" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.investments}
                                             </NavLink>
-                                            <NavLink to="/particulares/seguros" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.insurance}
                                             </NavLink>
-                                            <NavLink to="/particulares/digital" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.digital}
                                             </NavLink>
                                         </div>
@@ -165,19 +96,19 @@ const Navbar: React.FC = () => {
                                     </button>
                                     <div className="absolute left-0 mt-2 w-72 bg-white shadow-2xl border border-gray-200 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                                         <div className="py-2">
-                                            <NavLink to="/empresas/contas" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.businessAccounts}
                                             </NavLink>
-                                            <NavLink to="/empresas/financiamento" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.businessLoans}
                                             </NavLink>
-                                            <NavLink to="/empresas/tesouraria" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.treasury}
                                             </NavLink>
-                                            <NavLink to="/empresas/comercio-internacional" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.trade}
                                             </NavLink>
-                                            <NavLink to="/empresas/cartoes" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
+                                            <NavLink to="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-l-4 border-transparent hover:border-red-600 transition-all duration-300">
                                                 {currentTexts.cardsBusiness}
                                             </NavLink>
                                         </div>
@@ -185,16 +116,16 @@ const Navbar: React.FC = () => {
                                 </div>
 
                                 {/* Links diretos */}
-                                <NavLink to="/private" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
+                                <NavLink to="#" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                     {currentTexts.private}
                                 </NavLink>
-                                <NavLink to="/simulador" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
+                                <NavLink to="#" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                     {currentTexts.simulator}
                                 </NavLink>
-                                <NavLink to="/about" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
+                                <NavLink to="#" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                     {currentTexts.about}
                                 </NavLink>
-                                <NavLink to="/contact" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
+                                <NavLink to="#" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                     {currentTexts.contact}
                                 </NavLink>
                             </div>
