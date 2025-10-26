@@ -42,7 +42,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ language }) => {
     "./business.jpg",
     
     // Slide 2 - Family buying home
-    "./africanicidade1.jpg",
+    "./home.jpg",
     
     // Slide 3 - Young investors
     "./africanicidade2.jpg",
@@ -69,15 +69,15 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ language }) => {
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
         {slides.map((slide, index) => (
-          <div key={slide.id} className="flex-shrink-0 w-full h-full relative">
+          <div key={slide.id} className="shrink-0 w-full h-full relative">
             
             {/* Background Image with Strong Blur and Overlay */}
             <div 
-              className="absolute inset-0 bg-cover bg-center transform scale-105"
+              className="absolute inset-0 bg-cover bg-center transform scale-100"
               style={{ backgroundImage: `url(${backgroundImages[index]})` }}
             >
               <div className="absolute inset-0 backdrop-blur-\ bg-black/10"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/60"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-black/70 to-black/60"></div>
             </div>
 
             {/* Content Container - Centered vertically, aligned left with spacing */}
@@ -205,7 +205,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ language }) => {
       </div>
 
       {/* Stronger Gradient Overlay for better text readability */}
-      <div className="absolute right-0 top-0 w-2/5 h-full bg-gradient-to-l from-black/50 to-transparent z-10"></div>
+      <div className="absolute right-0 top-0 w-2/5 h-full bg-linear-to-l from-black/50 to-transparent z-10"></div>
     </div>
   );
 };

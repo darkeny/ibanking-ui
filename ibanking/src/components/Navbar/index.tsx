@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { IoBusinessOutline } from "react-icons/io5";
-import { CiLogin, CiGlobe, CiUser } from "react-icons/ci";
+import { CiLogin, CiUser } from "react-icons/ci";
+import { IoLanguage } from "react-icons/io5";
 import { navbarTexts } from '../../translations/navbarTexts';
 
 // Interface para as props
@@ -14,7 +15,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const handleRedirect = () => navigate('#');
+    const handleRedirect = () => navigate('/signin');
     const toggleMenu = () => setMenuOpen(!menuOpen);
 
 
@@ -31,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                                 onClick={toggleLanguage} // ← Agora usa a função do pai
                                 className="flex items-center gap-1 text-gray-600 hover:text-red-400 transition-colors duration-300"
                             >
-                                <CiGlobe size={14} />
+                                <IoLanguage size={14} />
                                 <span className="font-medium">{language}</span>
                             </button>
                             <NavLink to="#" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
@@ -45,8 +46,8 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                     <div className="relative flex h-20 items-center justify-between">
                         {/* Logo */}
                         <div className="flex flex-1 items-center justify-start">
-                            <a href='#' className="flex items-center">
-                                <div className="flex flex-shrink-0 items-center">
+                            <a href='/' className="flex items-center">
+                                <div className="flex shrink-0 items-center">
                                     <img className="h-5 w-auto mb-1" src="/bank-logo.png" alt="Vista Bank" />
                                     <span className='ml-3 block text-xl font-bold text-red-400 whitespace-nowrap'>
                                         {currentTexts.company}
@@ -143,7 +144,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                             <div className="hidden sm:flex">
                                 <button
                                     onClick={handleRedirect}
-                                    className='flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-colors duration-300'
+                                    className='flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-colors duration-300'
                                 >
                                     <CiLogin size={18} />
                                     {currentTexts.signup}
