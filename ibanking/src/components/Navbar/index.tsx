@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                                 <IoLanguage size={14} />
                                 <span className="font-medium">{language}</span>
                             </button>
-                            <NavLink to="#" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
+                            <NavLink to="/panel" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
                                 {currentTexts.login}
                             </NavLink>
                         </div>
@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                         <div className="flex flex-1 items-center justify-start">
                             <a href='/' className="flex items-center">
                                 <div className="flex shrink-0 items-center">
-                                    <img className="h-5 w-auto mb-1" src="/bank-logo.png" alt="Vista Bank" />
+                                    <img className="h-5 w-auto mb-1" src="/bank-logo.png" alt="Your Bank" />
                                     <span className='ml-3 block text-xl font-bold text-red-400 whitespace-nowrap'>
                                         {currentTexts.company}
                                     </span>

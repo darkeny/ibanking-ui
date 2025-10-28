@@ -103,8 +103,8 @@ export function SignIn() {
                                 {/* Logo Mobile apenas */}
                                 <div className="lg:hidden flex justify-center mb-6">
                                     <div className="flex items-center">
-                                        <img className="h-10 w-auto mr-3" src="/bank-logo.png" alt="Vista Bank" />
-                                        <span className="text-2xl font-bold text-white">Vista Bank</span>
+                                        <img className="h-10 w-auto mr-3" src="/bank-logo.png" alt="Your Bank" />
+                                        <span className="text-2xl font-bold text-white">Your Bank</span>
                                     </div>
                                 </div>
                                 <h2 className="text-2xl font-bold text-white mb-2">
