@@ -28,7 +28,7 @@ const AddNewCard: React.FC<AddNewCardProps> = ({
       `}
     >
       {/* Efeito de hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-transparent to-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-transparent to-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       {/* Conteúdo */}
       <div className="relative z-10 flex flex-col items-center">

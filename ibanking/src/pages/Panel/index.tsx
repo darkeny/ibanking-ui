@@ -80,7 +80,7 @@ const DashboardContent: React.FC = () => {
       </div>
 
       {/* Saldo Total */}
-      <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-2xl shadow-lg p-6 text-white">
+      <div className="bg-linear-to-r from-red-500 to-red-600 rounded-2xl shadow-lg p-6 text-white">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-red-100">Saldo Total Disponível</p>
