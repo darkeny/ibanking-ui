@@ -5,6 +5,8 @@ export const navbarTexts = {
       business: "Empresas",
       private: "Banco privado",
       about: "Sobre Nós",
+      settings: 'Definições',
+      language: 'Idioma',
   
       // Submenu Particulares
       accounts: "Contas",
@@ -26,7 +28,7 @@ export const navbarTexts = {
       signup: "Abrir Conta",
       simulator: "Simulador",
       contact: "Contactos",
-      company: "Vista Bank"
+      company: "Your Bank"
     },
   
     EN: {
@@ -35,6 +37,8 @@ export const navbarTexts = {
       business: "Business",
       private: "Private Banking",
       about: "About Us",
+      settings: 'Settings',
+      language: 'Language',
   
       // Submenu Personal
       accounts: "Accounts",
@@ -56,7 +60,7 @@ export const navbarTexts = {
       signup: "Open Account",
       simulator: "Simulator",
       contact: "Contact",
-      company: "Vista Bank"
+      company: "Your Bank"
     }
   };
   

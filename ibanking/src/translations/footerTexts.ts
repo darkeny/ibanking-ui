@@ -1,7 +1,7 @@
 export const footerTexts = {
     PT: {
       description:
-        "O Vista Bank é o seu parceiro financeiro de confiança, oferecendo soluções bancárias inovadoras para particulares e empresas.",
+        "O Your Bank é o seu parceiro financeiro de confiança, oferecendo soluções bancárias inovadoras para particulares e empresas.",
       quickLinks: "Links Rápidos",
       services: "Serviços",
       contact: "Contactos",
@@ -24,7 +24,7 @@ export const footerTexts = {
   
     EN: {
       description:
-        "Vista Bank is your trusted financial partner, offering innovative banking solutions for individuals and businesses.",
+        "Your Bank is your trusted financial partner, offering innovative banking solutions for individuals and businesses.",
       quickLinks: "Quick Links",
       services: "Services",
       contact: "Contact",
