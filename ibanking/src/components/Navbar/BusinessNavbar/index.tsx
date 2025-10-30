@@ -52,9 +52,10 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
   const location = useLocation();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<{[key: string]: boolean}>({
+    empresa: false,
     transferencias: false,
     pagamentos: false,
-    empresa: false
+    outrosServicos: false
   });
 
   const handleLogout = () => {
@@ -80,51 +81,42 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
 
   // Menu de Acesso Direto
   const quickAccessItems = [
-    { path: '/business/dashboard', icon: CiHome, label: currentBusinessTexts.dashboard },
     { path: '/business/operators', icon: TbUsers, label: currentBusinessTexts.operators },
     { path: '/business/products', icon: IoCardOutline, label: currentBusinessTexts.myProducts },
-  ];
-
-  // Menu de Transferências (com submenu)
-  const transferItems = [
     { path: '/business/transfers', icon: TbTransfer, label: currentBusinessTexts.transfers },
     { path: '/business/wallet-transfer', icon: FaWallet, label: currentBusinessTexts.walletTransfer },
+    { path: '/business/payments/suppliers', icon: CiReceipt, label: currentBusinessTexts.paySuppliers },
+    { path: '/business/payments/salaries', icon: IoPeopleOutline, label: currentBusinessTexts.paySalaries },
+    { path: '/business/payments/services', icon: MdOutlinePayments, label: currentBusinessTexts.payServices },
+    { path: '/business/topup', icon: CiMoneyBill, label: currentBusinessTexts.topup },
   ];
 
-  // Submenu de Transferências
-  const transferSubItems = [
+  // Menu Empresa
+  const companyItems = [
+    { path: '/business/company/management', icon: IoBusinessOutline, label: currentBusinessTexts.accountManagement },
+    { path: '/business/company/current-accounts', icon: CiBank, label: currentBusinessTexts.currentAccounts },
+  ];
+
+  // Menu Transferências
+  const transferItems = [
     { path: '/business/transfers/national', icon: TbTransfer, label: currentBusinessTexts.nationalTransfers },
     { path: '/business/transfers/multiple', icon: TbTransfer, label: currentBusinessTexts.multipleTransfers },
-    { path: '/business/transfers/scheduled', icon: CiCalendar, label: currentBusinessTexts.scheduledOperations },
-    { path: '/business/transfers/debt-conversion', icon: FaMoneyCheckAlt, label: currentBusinessTexts.debtConversion },
     { path: '/business/transfers/digital-wallet', icon: FaWallet, label: currentBusinessTexts.digitalWallet },
+    { path: '/business/transfers/debt-conversion', icon: FaMoneyCheckAlt, label: currentBusinessTexts.debtConversion },
+    { path: '/business/transfers/wallet-transfer', icon: FaWallet, label: currentBusinessTexts.walletTransfer },
+    { path: '/business/transfers/scheduled', icon: CiCalendar, label: currentBusinessTexts.scheduledOperations },
   ];
 
-  // Menu de Pagamentos (com submenu)
+  // Menu Pagamentos
   const paymentItems = [
     { path: '/business/payments/suppliers', icon: CiReceipt, label: currentBusinessTexts.paySuppliers },
     { path: '/business/payments/salaries', icon: IoPeopleOutline, label: currentBusinessTexts.paySalaries },
     { path: '/business/payments/services', icon: MdOutlinePayments, label: currentBusinessTexts.payServices },
-  ];
-
-  // Submenu de Pagamentos
-  const paymentSubItems = [
     { path: '/business/payments/state', icon: CiCalendar, label: currentBusinessTexts.statePayments },
     { path: '/business/payments/schedule', icon: CiCalendar, label: currentBusinessTexts.paymentSchedule },
     { path: '/business/payments/direct-debits', icon: CiMoneyBill, label: currentBusinessTexts.directDebits },
     { path: '/business/payments/forex', icon: CiMoneyBill, label: currentBusinessTexts.forex },
     { path: '/business/payments/bulk', icon: MdOutlinePayments, label: currentBusinessTexts.bulkPayments },
-  ];
-
-  // Menu Empresa (com submenu)
-  const companyItems = [
-    { path: '/business/company/management', icon: IoBusinessOutline, label: currentBusinessTexts.accountManagement },
-  ];
-
-  // Submenu Empresa
-  const companySubItems = [
-    { path: '/business/company/current-accounts', icon: CiBank, label: currentBusinessTexts.currentAccounts },
-    { path: '/business/company/transfers', icon: TbTransfer, label: currentBusinessTexts.transfers },
   ];
 
   // Outros serviços
@@ -251,6 +243,53 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
             })}
           </nav>
 
+          {/* Empresa */}
+          <div className="border-t border-gray-100">
+            <button
+              onClick={() => toggleSection('empresa')}
+              className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+            >
+              <div className="flex items-center space-x-3">
+                <IoBusinessOutline size={20} />
+                <span>{currentBusinessTexts.company}</span>
+              </div>
+              <svg 
+                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.empresa ? 'rotate-180' : ''}`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {expandedSections.empresa && (
+              <div className="pl-8 pr-3 pb-2 space-y-1">
+                {companyItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigation(item.path)}
+                      className={`
+                        flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
+                        ${isActive 
+                          ? 'bg-red-50 text-red-600' 
+                          : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
+                        }
+                      `}
+                    >
+                      <Icon size={16} />
+                      <span className="text-xs">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Transferências */}
           <div className="border-t border-gray-100">
             <button
@@ -294,31 +333,6 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
                     </button>
                   );
                 })}
-                
-                {/* Submenu de Transferências */}
-                <div className="mt-2 space-y-1">
-                  {transferSubItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path;
-                    
-                    return (
-                      <button
-                        key={item.path}
-                        onClick={() => handleNavigation(item.path)}
-                        className={`
-                          flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
-                          ${isActive 
-                            ? 'bg-red-50 text-red-600' 
-                            : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
-                          }
-                        `}
-                      >
-                        <Icon size={14} />
-                        <span className="text-xs">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
             )}
           </div>
@@ -366,47 +380,22 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
                     </button>
                   );
                 })}
-                
-                {/* Submenu de Pagamentos */}
-                <div className="mt-2 space-y-1">
-                  {paymentSubItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path;
-                    
-                    return (
-                      <button
-                        key={item.path}
-                        onClick={() => handleNavigation(item.path)}
-                        className={`
-                          flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
-                          ${isActive 
-                            ? 'bg-red-50 text-red-600' 
-                            : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
-                          }
-                        `}
-                      >
-                        <Icon size={14} />
-                        <span className="text-xs">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
             )}
           </div>
 
-          {/* Empresa */}
+          {/* Outros Serviços */}
           <div className="border-t border-gray-100">
             <button
-              onClick={() => toggleSection('empresa')}
+              onClick={() => toggleSection('outrosServicos')}
               className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
             >
               <div className="flex items-center space-x-3">
-                <IoBusinessOutline size={20} />
-                <span>{currentBusinessTexts.company}</span>
+                <CiSettings size={20} />
+                <span>{currentBusinessTexts.otherServices}</span>
               </div>
               <svg 
-                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.empresa ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.outrosServicos ? 'rotate-180' : ''}`}
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -415,9 +404,9 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
               </svg>
             </button>
             
-            {expandedSections.empresa && (
+            {expandedSections.outrosServicos && (
               <div className="pl-8 pr-3 pb-2 space-y-1">
-                {companyItems.map((item) => {
+                {otherServicesItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
                   
@@ -438,65 +427,11 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
                     </button>
                   );
                 })}
-                
-                {/* Submenu Empresa */}
-                <div className="mt-2 space-y-1">
-                  {companySubItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path;
-                    
-                    return (
-                      <button
-                        key={item.path}
-                        onClick={() => handleNavigation(item.path)}
-                        className={`
-                          flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
-                          ${isActive 
-                            ? 'bg-red-50 text-red-600' 
-                            : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
-                          }
-                        `}
-                      >
-                        <Icon size={14} />
-                        <span className="text-xs">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
             )}
           </div>
 
-          {/* Outros Serviços */}
-          <nav className="p-4 border-t border-gray-100 space-y-1">
-            <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              {currentBusinessTexts.otherServices}
-            </p>
-            
-            {otherServicesItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => handleNavigation(item.path)}
-                  className={`
-                    flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left
-                    ${isActive 
-                      ? 'bg-red-50 text-red-600' 
-                      : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Menu de Configurações */}
+          {/* Definições */}
           <nav className="p-4 border-t border-gray-100">
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               {currentTexts.settings}

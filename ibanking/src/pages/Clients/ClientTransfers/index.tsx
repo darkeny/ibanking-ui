@@ -1,7 +1,7 @@
 // pages/ClientTransfers.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClientLayout } from '../../components/ClientLayout';
+import { ClientLayout } from '../../../components/ClientLayout';
 
 const ClientTransfers: React.FC = () => {
   const navigate = useNavigate();
