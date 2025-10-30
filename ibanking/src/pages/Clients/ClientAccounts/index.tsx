@@ -66,7 +66,7 @@ const ClientAccounts: React.FC = () => {
             <p className="text-gray-600 mt-1">Gerir e visualizar todas as suas contas</p>
           </div>
           <button 
-            onClick={() => navigate('/business/dashboard')}
+            onClick={() => navigate('/panel')}
             className="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
           >
             Voltar ao Dashboard

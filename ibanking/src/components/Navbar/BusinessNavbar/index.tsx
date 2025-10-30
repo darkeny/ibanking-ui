@@ -83,7 +83,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
   const quickAccessItems = [
     { path: '/business/operators', icon: TbUsers, label: currentBusinessTexts.operators },
     { path: '/business/products', icon: IoCardOutline, label: currentBusinessTexts.myProducts },
-    { path: '/business/transfers', icon: TbTransfer, label: currentBusinessTexts.transfers },
+    { path: '/business/transfers/multiple', icon: TbTransfer, label: currentBusinessTexts.transfers },
     { path: '/business/wallet-transfer', icon: FaWallet, label: currentBusinessTexts.walletTransfer },
     { path: '/business/payments/suppliers', icon: CiReceipt, label: currentBusinessTexts.paySuppliers },
     { path: '/business/payments/salaries', icon: IoPeopleOutline, label: currentBusinessTexts.paySalaries },
@@ -157,10 +157,10 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
             <img 
               className="h-6 w-auto" 
               src="/bank-logo.png" 
-              alt="Vista Bank" 
+              alt="Your Bank" 
             />
             <span className="text-lg font-bold text-red-600">
-              Vista Bank Business
+              Your Bank Business
             </span>
           </div>
           

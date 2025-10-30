@@ -21,9 +21,9 @@ const ClientTransfers: React.FC = () => {
   ];
 
   const recentContacts = [
-    { name: 'Maria Silva', nib: 'PT50 9876 5432 1098 7654 3210', bank: 'Vista Bank' },
+    { name: 'Maria Silva', nib: 'PT50 9876 5432 1098 7654 3210', bank: 'Your Bank' },
     { name: 'Carlos Santos', nib: 'PT50 1111 2222 3333 4444 5555', bank: 'Outro Banco' },
-    { name: 'Ana Costa', nib: 'PT50 6666 7777 8888 9999 0000', bank: 'Vista Bank' },
+    { name: 'Ana Costa', nib: 'PT50 6666 7777 8888 9999 0000', bank: 'Your Bank' },
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

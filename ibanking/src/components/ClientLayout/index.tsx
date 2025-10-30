@@ -44,7 +44,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
             <img 
               className="h-6 w-auto" 
               src="/bank-logo.png" 
-              alt="Vista Bank" 
+              alt="Your Bank" 
             />
             <div className="w-10"></div> {/* Spacer para alinhamento */}
           </div>

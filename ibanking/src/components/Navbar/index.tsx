@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                                 <IoLanguage size={14} />
                                 <span className="font-medium">{language}</span>
                             </button>
-                            <NavLink to="/panel" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
+                            <NavLink to="/mypanel" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
                                 {currentTexts.login}
                             </NavLink>
                         </div>
