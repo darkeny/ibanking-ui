@@ -1,7 +1,6 @@
 // pages/Panel.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClientLayout } from '../../components/ClientLayout';
 import CreditCard from '../../components/CreditCard';
 import AddNewCard from '../../components/AddNewCard';
 
@@ -9,30 +8,30 @@ import AddNewCard from '../../components/AddNewCard';
 const DashboardContent: React.FC = () => {
   const navigate = useNavigate();
   const [quickActions] = useState([
-    { 
-      title: 'Transferência Imediata', 
-      description: 'Envie dinheiro agora', 
+    {
+      title: 'Transferência Imediata',
+      description: 'Envie dinheiro agora',
       icon: '↗️',
       color: 'bg-blue-50 text-blue-600',
       path: '/client/transfers'
     },
-    { 
-      title: 'Pagamentos', 
-      description: 'Pague serviços', 
+    {
+      title: 'Pagamentos',
+      description: 'Pague serviços',
       icon: '💰',
       color: 'bg-green-50 text-green-600',
       path: '/client/payments'
     },
-    { 
-      title: 'Cartões', 
-      description: 'Gerir cartões', 
+    {
+      title: 'Cartões',
+      description: 'Gerir cartões',
       icon: '💳',
       color: 'bg-purple-50 text-purple-600',
       path: '/client/cards'
     },
-    { 
-      title: 'Investir', 
-      description: 'Aplicações financeiras', 
+    {
+      title: 'Investir',
+      description: 'Aplicações financeiras',
       icon: '📈',
       color: 'bg-orange-50 text-orange-600',
       path: '/client/investments'
@@ -91,7 +90,7 @@ const DashboardContent: React.FC = () => {
             <button className="bg-white text-red-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-50 transition-colors">
               Ver Extrato
             </button>
-            <button 
+            <button
               onClick={() => navigate('/client/transfers')}
               className="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-800 transition-colors"
             >
@@ -137,11 +136,10 @@ const DashboardContent: React.FC = () => {
             {accounts.map((account, index) => (
               <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    account.type === 'current' ? 'bg-blue-100 text-blue-600' :
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${account.type === 'current' ? 'bg-blue-100 text-blue-600' :
                     account.type === 'savings' ? 'bg-green-100 text-green-600' :
-                    'bg-orange-100 text-orange-600'
-                  }`}>
+                      'bg-orange-100 text-orange-600'
+                    }`}>
                     {account.type === 'current' ? '🏦' : account.type === 'savings' ? '💰' : '📈'}
                   </div>
                   <div>
@@ -171,9 +169,8 @@ const DashboardContent: React.FC = () => {
           {recentTransactions.map((transaction) => (
             <div key={transaction.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
               <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  transaction.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-                }`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                  }`}>
                   {transaction.type === 'credit' ? '↓' : '↑'}
                 </div>
                 <div>
@@ -181,9 +178,8 @@ const DashboardContent: React.FC = () => {
                   <p className="text-xs text-gray-500">{transaction.date}</p>
                 </div>
               </div>
-              <div className={`font-semibold text-sm ${
-                transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div className={`font-semibold text-sm ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                }`}>
                 {transaction.type === 'credit' ? '+' : '-'}€ {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
               </div>
             </div>
@@ -228,13 +224,4 @@ const DashboardContent: React.FC = () => {
   );
 };
 
-// Página principal do cliente com Layout
-const ClientDashboard: React.FC = () => {
-  return (
-    <ClientLayout>
-      <DashboardContent />
-    </ClientLayout>
-  );
-};
-
-export default ClientDashboard;
+export default DashboardContent;
