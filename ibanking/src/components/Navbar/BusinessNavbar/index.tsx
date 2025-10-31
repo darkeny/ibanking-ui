@@ -9,21 +9,17 @@ import {
   CiMoneyBill,
   CiLock,
   CiBellOn,
-  CiHome,
   CiCalendar,
   CiReceipt,
-  CiWallet,
   CiCreditCard1,
 } from "react-icons/ci";
 import { 
-  IoStatsChart, 
   IoBusinessOutline,
   IoPeopleOutline,
-  IoDocumentTextOutline,
   IoCardOutline
 } from "react-icons/io5";
-import { TbTransfer, TbReportAnalytics, TbUsers } from "react-icons/tb";
-import { MdOutlineAccountBalance, MdOutlinePayments, MdOutlineSavings } from "react-icons/md";
+import { TbTransfer, TbUsers } from "react-icons/tb";
+import { MdOutlinePayments, MdOutlineSavings } from "react-icons/md";
 import { FaWallet, FaMoneyCheckAlt } from "react-icons/fa";
 import { businessTexts } from '../../../translations/businessNavbar';
 import { navbarTexts } from '../../../translations/navbarTexts';
