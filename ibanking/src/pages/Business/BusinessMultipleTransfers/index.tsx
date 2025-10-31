@@ -401,7 +401,7 @@ const BusinessMultipleTransfers: React.FC = () => {
 
                                     <div className="space-y-3">
                                         <h3 className="font-semibold text-gray-900">Transferências a processar:</h3>
-                                        {getValidTransfers().map((transfer, index) => (
+                                        {getValidTransfers().map((transfer) => (
                                             <div key={transfer.id} className="flex justify-between items-center p-3 bg-white border border-gray-200 rounded-lg">
                                                 <div>
                                                     <div className="font-medium">{transfer.name}</div>
