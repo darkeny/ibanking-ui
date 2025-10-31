@@ -7,7 +7,7 @@ export const footerTexts = {
       contact: "Contactos",
       address: "JAT V-III, 14 Andar, Maputo",
       phone: "+258 21 123 4567",
-      email: "info@vistabank.co.mz",
+      email: "info@yourbank.co.mz",
       social: "Siga-nos",
       privacy: "Política de Privacidade",
       terms: "Termos e Condições",
