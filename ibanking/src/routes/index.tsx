@@ -7,6 +7,7 @@ import { ClientDashboard } from '../pages/Clients/ClientsDashboard';
 import BusinessDashboard from '../pages/Business/BusinessDashboard';
 import BusinessMultipleTransfers from '../pages/Business/BusinessMultipleTransfers';
 import NotFound from '../pages/NotFound';
+import NotificationPreferences from '../components/NotificationPreferences';
 
 
 const AppRoutes: React.FC = () => {
@@ -19,6 +20,7 @@ const AppRoutes: React.FC = () => {
                 <Route path={'/panel'} element={<BusinessDashboard />} />
                 <Route path={'/client/transfers'} element={<ClientTransfers />} />
                 <Route path={'/business/transfers/multiple'} element={<BusinessMultipleTransfers />} />
+                <Route path="/business/notifications" element={<NotificationPreferences language={"PT"} />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,5 +1,5 @@
 // components/BusinessNavbar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
 import { BsPiggyBank } from "react-icons/bs";
 import { 
@@ -12,6 +12,8 @@ import {
   CiCalendar,
   CiReceipt,
   CiCreditCard1,
+  CiMail,
+  CiMobile3,
 } from "react-icons/ci";
 import { 
   IoBusinessOutline,
@@ -35,6 +37,17 @@ interface BusinessNavbarProps {
   userName?: string;
 }
 
+// Interface para as preferências de notificação
+interface NotificationPreferences {
+  enabled: boolean;
+  email: boolean;
+  sms: boolean;
+  transactionAlerts: boolean;
+  balanceAlerts: boolean;
+  dueDateAlerts: boolean;
+  securityAlerts: boolean;
+}
+
 const BusinessNavbar: React.FC<BusinessNavbarProps> = ({ 
   language, 
   toggleLanguage, 
@@ -54,6 +67,31 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     outrosServicos: false
   });
 
+  // Estado para as preferências de notificação
+  const [notificationPrefs, setNotificationPrefs] = useState<NotificationPreferences>({
+    enabled: false,
+    email: false,
+    sms: false,
+    transactionAlerts: true,
+    balanceAlerts: true,
+    dueDateAlerts: true,
+    securityAlerts: true
+  });
+
+  // Carregar preferências do localStorage ao inicializar
+  useEffect(() => {
+    const savedPrefs = localStorage.getItem('businessNotificationPrefs');
+    if (savedPrefs) {
+      setNotificationPrefs(JSON.parse(savedPrefs));
+    }
+  }, []);
+
+  // Salvar preferências no localStorage
+  const savePreferences = (prefs: NotificationPreferences) => {
+    setNotificationPrefs(prefs);
+    localStorage.setItem('businessNotificationPrefs', JSON.stringify(prefs));
+  };
+
   const handleLogout = () => {
     navigate('/');
   };
@@ -70,6 +108,13 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
 
   const handleNavigation = (path: string) => {
     navigate(path);
+    if (window.innerWidth < 1024) {
+      onToggle();
+    }
+  };
+
+  const handleNotificationClick = () => {
+    navigate('/business/notifications');
     if (window.innerWidth < 1024) {
       onToggle();
     }
@@ -120,6 +165,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/cards', icon: CiCreditCard1, label: currentBusinessTexts.cards },
     { path: '/business/savings', icon: MdOutlineSavings, label: currentBusinessTexts.savings },
     { path: '/business/financing', icon: BsPiggyBank, label: currentBusinessTexts.financing },
+    { path: '/business/notifications', icon: CiBellOn, label: currentBusinessTexts.notifications },
   ];
 
   // Menu de configurações
@@ -199,11 +245,13 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
             </button>
             
             <button
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
+              onClick={handleNotificationClick}
               className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors relative"
             >
               <CiBellOn size={18} />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+              {notificationPrefs.enabled && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+              )}
             </button>
           </div>
         </div>

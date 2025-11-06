@@ -6,7 +6,7 @@ export const businessTexts = {
     dashboard: 'Dashboard',
     operators: 'Operadores',
     myProducts: 'Os Meus Productos',
-    
+
     // Transferências
     transfers: 'Transferencias',
     walletTransfer: 'Transferencia Carteira Digital',
@@ -15,7 +15,7 @@ export const businessTexts = {
     scheduledOperations: 'Consultar operações agendadas',
     debtConversion: 'Conversão de dividas',
     digitalWallet: 'Carteira digital',
-    
+
     // Pagamentos
     payments: 'Pagamentos',
     paySuppliers: 'Pagar Fornecedores',
@@ -26,23 +26,23 @@ export const businessTexts = {
     directDebits: 'Debitos directos',
     forex: 'Cambios',
     bulkPayments: 'Pagamentos em Massa',
-    
+
     // Empresa
     company: 'Empresa',
     accountManagement: 'Gestão corrente',
     currentAccounts: 'Contas a Ordem',
-    
+
     // Outros Serviços
     otherServices: 'Outros Serviços',
     cards: 'Cartões',
     savings: 'Poupança',
     financing: 'Financiamento',
-    
+
     // Configurações
     companyProfile: 'Perfil da Empresa',
     security: 'Segurança',
     settings: 'Definições',
-    
+
     // Textos que estavam faltando
     topup: 'Carregamentos',
     analytics: 'Analytics',
@@ -62,7 +62,17 @@ export const businessTexts = {
     balance: 'Saldo',
     history: 'Histórico',
     configuration: 'Configuração',
-    
+
+    //Notificações
+    alertas: 'Alertas e Notificações',
+    enableNotifications: 'Ativar Notificações',
+    notificationChannels: 'Canais de Notificação',
+    alertTypes: 'Tipos de Alertas',
+    transactionAlerts: 'Alertas de Transações',
+    balanceAlerts: 'Alertas de Saldo',
+    dueDateAlerts: 'Alertas de Vencimentos',
+    securityAlerts: 'Alertas de Segurança',
+
     // Geral
     logout: 'Terminar Sessão'
   },
@@ -72,7 +82,7 @@ export const businessTexts = {
     dashboard: 'Dashboard',
     operators: 'Operators',
     myProducts: 'My Products',
-    
+
     // Transferências
     transfers: 'Transfers',
     walletTransfer: 'Digital Wallet Transfer',
@@ -81,7 +91,7 @@ export const businessTexts = {
     scheduledOperations: 'Scheduled Operations',
     debtConversion: 'Debt Conversion',
     digitalWallet: 'Digital Wallet',
-    
+
     // Pagamentos
     payments: 'Payments',
     paySuppliers: 'Pay Suppliers',
@@ -92,23 +102,23 @@ export const businessTexts = {
     directDebits: 'Direct Debits',
     forex: 'Forex',
     bulkPayments: 'Bulk Payments',
-    
+
     // Empresa
     company: 'Company',
     accountManagement: 'Account Management',
     currentAccounts: 'Current Accounts',
-    
+
     // Outros Serviços
     otherServices: 'Other Services',
     cards: 'Cards',
     savings: 'Savings',
     financing: 'Financing',
-    
+
     // Configurações
     companyProfile: 'Company Profile',
     security: 'Security',
     settings: 'Settings',
-    
+
     // Textos que estavam faltando
     topup: 'Top-ups',
     analytics: 'Analytics',
@@ -128,7 +138,18 @@ export const businessTexts = {
     balance: 'Balance',
     history: 'History',
     configuration: 'Configuration',
-    
+
+    //Alerts
+    alertas: 'Alerts and Notifications',
+    enableNotifications: 'Enable Notifications',
+    notificationChannels: 'Notification Channels',
+    alertTypes: 'Alert Types',
+    transactionAlerts: 'Transaction Alerts',
+    balanceAlerts: 'Balance Alerts',
+    dueDateAlerts: 'Due Date Alerts',
+    securityAlerts: 'Security Alerts',
+
+
     // Geral
     logout: 'Logout'
   }
