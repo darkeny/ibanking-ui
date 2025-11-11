@@ -8,6 +8,10 @@ import BusinessDashboard from '../pages/Business/BusinessDashboard';
 import BusinessMultipleTransfers from '../pages/Business/BusinessMultipleTransfers';
 import NotFound from '../pages/NotFound';
 import NotificationPreferences from '../components/NotificationPreferences';
+import DigitalWalletPayment from '../components/DigitalWalletPayment';
+import TransactionAuthorization from '../components/TransactionAuthorization';
+import BusinessDashboardContent from '../pages/Panel/BusinessPanel';
+import Signup from '../pages/Signup';
 
 
 const AppRoutes: React.FC = () => {
@@ -21,6 +25,10 @@ const AppRoutes: React.FC = () => {
                 <Route path={'/client/transfers'} element={<ClientTransfers />} />
                 <Route path={'/business/transfers/multiple'} element={<BusinessMultipleTransfers />} />
                 <Route path="/business/notifications" element={<NotificationPreferences language={"PT"} />} />
+                <Route path="/business/transfers/digital-wallet" element={<DigitalWalletPayment language={"PT"} />} />
+                <Route path="/panel" element={<BusinessDashboardContent />} />
+                <Route path="/business/authorization" element={<TransactionAuthorization language={"PT"} />} />
+                <Route path="/signup" element={<Signup language={"PT"} />} />
 
                 <Route path="*" element={<NotFound />} />
             </Routes>

@@ -83,7 +83,7 @@ const DashboardContent: React.FC = () => {
         <div className="flex justify-between items-start">
           <div>
             <p className="text-red-100">Saldo Total Disponível</p>
-            <p className="text-3xl font-bold mt-2">€ 26.671,20</p>
+            <p className="text-3xl font-bold mt-2">MZN 26.671,20</p>
             <p className="text-red-100 text-sm mt-1">Última atualização: hoje às 14:30</p>
           </div>
           <div className="flex space-x-2">
@@ -148,7 +148,7 @@ const DashboardContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900 text-sm">€ {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
+                  <p className="font-semibold text-gray-900 text-sm">MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
                   <p className="text-xs text-gray-500">Disponível</p>
                 </div>
               </div>
@@ -180,7 +180,7 @@ const DashboardContent: React.FC = () => {
               </div>
               <div className={`font-semibold text-sm ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
                 }`}>
-                {transaction.type === 'credit' ? '+' : '-'}€ {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                {transaction.type === 'credit' ? '+' : '-'}MZN {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
               </div>
             </div>
           ))}

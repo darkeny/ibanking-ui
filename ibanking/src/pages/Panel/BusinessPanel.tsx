@@ -100,7 +100,7 @@ const BusinessDashboardContent: React.FC = () => {
         <div className="flex justify-between items-start">
           <div>
             <p className="text-red-100">Saldo Total Empresarial</p>
-            <p className="text-3xl font-bold mt-2">€ 235.421,20</p>
+            <p className="text-3xl font-bold mt-2">MZN 235.421,20</p>
             <p className="text-red-100 text-sm mt-1">Última atualização: hoje às 14:30</p>
           </div>
           <div className="flex space-x-2">
@@ -123,7 +123,7 @@ const BusinessDashboardContent: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Receitas Totais</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">€ {financialOverview.totalRevenue.toLocaleString('pt-PT')}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalRevenue.toLocaleString('pt-PT')}</p>
             </div>
             <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
               <span className="text-2xl">📈</span>
@@ -136,7 +136,7 @@ const BusinessDashboardContent: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Despesas Totais</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">€ {financialOverview.totalExpenses.toLocaleString('pt-PT')}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalExpenses.toLocaleString('pt-PT')}</p>
             </div>
             <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center">
               <span className="text-2xl">📉</span>
@@ -198,7 +198,7 @@ const BusinessDashboardContent: React.FC = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900 text-sm">€ {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
+                  <p className="font-semibold text-gray-900 text-sm">MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
                   <p className="text-xs text-gray-500">Disponível</p>
                 </div>
               </div>
@@ -230,7 +230,7 @@ const BusinessDashboardContent: React.FC = () => {
               </div>
               <div className={`font-semibold text-sm ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
                 }`}>
-                {transaction.type === 'credit' ? '+' : '-'}€ {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                {transaction.type === 'credit' ? '+' : '-'}MZN {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
               </div>
             </div>
           ))}

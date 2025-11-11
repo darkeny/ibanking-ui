@@ -6,6 +6,8 @@ export const businessTexts = {
     dashboard: 'Dashboard',
     operators: 'Operadores',
     myProducts: 'Os Meus Productos',
+    transactionAuthorization: 'Autorização de Transações',
+
 
     // Transferências
     transfers: 'Transferencias',
@@ -82,6 +84,7 @@ export const businessTexts = {
     dashboard: 'Dashboard',
     operators: 'Operators',
     myProducts: 'My Products',
+    transactionAuthorization: 'Transaction Authorization',
 
     // Transferências
     transfers: 'Transfers',

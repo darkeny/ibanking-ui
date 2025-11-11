@@ -120,7 +120,7 @@ const ClientTransfers: React.FC = () => {
                       <option value="">Selecione a conta</option>
                       {accounts.map(account => (
                         <option key={account.id} value={account.id}>
-                          {account.name} - {account.number} (€ {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })})
+                          {account.name} - {account.number} (MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })})
                         </option>
                       ))}
                     </select>

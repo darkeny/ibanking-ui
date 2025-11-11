@@ -302,7 +302,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                                             />
                                                         </div>
                                                         <div>
-                                                            <label className="block text-sm font-medium text-gray-700 mb-1">Valor (€)</label>
+                                                            <label className="block text-sm font-medium text-gray-700 mb-1">Valor (MZN)</label>
                                                             <input
                                                                 type="number"
                                                                 placeholder="0,00"
@@ -386,7 +386,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Valor Total:</span>
                                             <span className="font-semibold text-red-600 text-lg">
-                                                € {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
                                         {formData.scheduled && (
@@ -408,7 +408,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                                     <div className="text-sm text-gray-500">{transfer.nib}</div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="font-semibold">€ {parseFloat(transfer.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</div>
+                                                    <div className="font-semibold">MZN {parseFloat(transfer.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</div>
                                                     <div className="text-sm text-gray-500">{transfer.description}</div>
                                                 </div>
                                             </div>
@@ -445,7 +445,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Transferências Processadas!</h2>
                                         <p className="text-gray-600">
                                             O lote com <strong>{getValidTransfers().length} transferências</strong> no valor total de{' '}
-                                            <strong>€ {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</strong> foi processado com sucesso.
+                                            <strong>MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</strong> foi processado com sucesso.
                                         </p>
                                     </div>
 
@@ -493,7 +493,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                 <option value="">Selecione a conta</option>
                                 {accounts.map(account => (
                                     <option key={account.id} value={account.id}>
-                                        {account.name} - € {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                        {account.name} - MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                     </option>
                                 ))}
                             </select>
@@ -552,7 +552,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                         <div className="flex justify-between text-lg">
                                             <span className="font-semibold">Valor Total:</span>
                                             <span className="font-bold text-red-600">
-                                                € {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
                                     </div>
