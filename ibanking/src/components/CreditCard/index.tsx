@@ -91,7 +91,7 @@ const CreditCard: React.FC<CreditCardProps> = ({
           <div className="text-right">
             <div className="mb-0">
               <p className={`${getTextColor()} text-sm mb-`}>Limite</p>
-              <p className="font-medium">€ {limit?.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
+              <p className="font-medium">MZN {limit?.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         ) : (
