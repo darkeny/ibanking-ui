@@ -69,7 +69,7 @@ const AppRoutes: React.FC = () => {
                 {/* Outros Serviços */}
                 <Route path="/business/operators" element={<ComingSoon language={"PT"} />} />
                 <Route path="/business/products" element={<ComingSoon language={"PT"} />} />
-                <Route path="/business/wallet-transfer" element={<ComingSoon language={"PT"} />} />
+                <Route path="/business/transfers/digital-wallet" element={<ComingSoon language={"PT"} />} />
                 <Route path="/business/topup" element={<ComingSoon language={"PT"} />} />
                 <Route path="/business/cards" element={<ComingSoon language={"PT"} />} />
                 <Route path="/business/savings" element={<ComingSoon language={"PT"} />} />
@@ -85,7 +85,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/business/reports" element={<ComingSoon language={"PT"} />} />
                 
                 {/* Rotas Genéricas */}
-                <Route path="/business/transfers" element={<ComingSoon language={"PT"} />} />
+                <Route path="/business/transfers/multiple" element={<ComingSoon language={"PT"} />} />
                 <Route path="/business/payments" element={<ComingSoon language={"PT"} />} />
                 <Route path="/comingsoon" element={<ComingSoon language={"PT"} />} />
 
