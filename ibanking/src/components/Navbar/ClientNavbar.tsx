@@ -49,7 +49,7 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
   const currentClientTexts = clientTexts[language];
 
   const menuItems = [
-    { path: '/panel', icon: CiHome, label: currentClientTexts.dashboard },
+    { path: '/mypanel', icon: CiHome, label: currentClientTexts.dashboard },
     { path: '/client/accounts', icon: CiBank, label: currentClientTexts.accounts },
     { path: '/client/transfers', icon: TbTransfer, label: currentClientTexts.transfers },
     { path: '/client/payments', icon: CiMoneyBill, label: currentClientTexts.payments },

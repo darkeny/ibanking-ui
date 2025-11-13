@@ -64,6 +64,7 @@ export const businessTexts = {
     balance: 'Saldo',
     history: 'Histórico',
     configuration: 'Configuração',
+    scheduledTransfers: 'Transferências Agendadas',
 
     //Notificações
     alertas: 'Alertas e Notificações',
@@ -141,6 +142,7 @@ export const businessTexts = {
     balance: 'Balance',
     history: 'History',
     configuration: 'Configuration',
+    scheduledTransfers: 'Scheduled Transfers',
 
     //Alerts
     alertas: 'Alerts and Notifications',

@@ -35,6 +35,62 @@ const BusinessDashboardContent: React.FC = () => {
       color: 'bg-orange-50 text-orange-600',
       path: '/business/reports'
     },
+    {
+      title: 'Operadores',
+      description: 'Gestão de utilizadores',
+      icon: '👥',
+      color: 'bg-blue-50 text-blue-600',
+      path: '/business/operators'
+    },
+    {
+      title: 'Produtos',
+      description: 'Meus produtos bancários',
+      icon: '💳',
+      color: 'bg-indigo-50 text-indigo-600',
+      path: '/business/products'
+    },
+    {
+      title: 'Carteira Digital',
+      description: 'Transferências para carteira',
+      icon: '👛',
+      color: 'bg-teal-50 text-teal-600',
+      path: '/business/wallet-transfer'
+    },
+    {
+      title: 'Pag. Fornecedores',
+      description: 'Pagar fornecedores',
+      icon: '🏢',
+      color: 'bg-cyan-50 text-cyan-600',
+      path: '/business/payments/suppliers'
+    },
+    {
+      title: 'Pag. Salários',
+      description: 'Pagar salários',
+      icon: '👨‍💼',
+      color: 'bg-amber-50 text-amber-600',
+      path: '/business/payments/salaries'
+    },
+    {
+      title: 'Pag. Serviços',
+      description: 'Pagar serviços',
+      icon: '🔧',
+      color: 'bg-lime-50 text-lime-600',
+      path: '/business/payments/services'
+    },
+    {
+      title: 'Carregamentos',
+      description: 'Carregar contas',
+      icon: '📱',
+      color: 'bg-pink-50 text-pink-600',
+      path: '/business/topup'
+    },
+    {
+      title: 'Cartões',
+      description: 'Gestão de cartões',
+      icon: '💳',
+      color: 'bg-violet-50 text-violet-600',
+      path: '/business/cards'
+    }
   ]);
 
   const [recentTransactions] = useState([
@@ -144,36 +200,36 @@ const BusinessDashboardContent: React.FC = () => {
           </div>
           <p className="text-xs text-red-600 mt-2">-5% vs último mês</p>
         </div>
-
-        
-
-        
       </div>
 
-      {/* Ações Rápidas e Contas Empresariais - Lado a Lado */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Ações Rápidas Empresariais */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Operações Empresariais</h2>
-          <div className="grid grid-cols-2 gap-3">
-            {quickActions.map((action, index) => (
-              <button
-                key={index}
-                onClick={() => handleQuickAction(action.path)}
-                className="flex flex-col items-center p-4 rounded-xl border border-gray-100 hover:border-red-200 hover:bg-red-50 transition-all duration-200 group"
-              >
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl mb-2 ${action.color}`}>
-                  {action.icon}
-                </div>
-                <div className="text-center">
-                  <p className="font-semibold text-gray-900 group-hover:text-red-600 text-sm">{action.title}</p>
-                  <p className="text-xs text-gray-500 mt-1">{action.description}</p>
-                </div>
-              </button>
-            ))}
-          </div>
+      {/* Operações Empresariais - Ocupa coluna completa */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Operações Empresariais</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          {quickActions.map((action, index) => (
+            <button
+              key={index}
+              onClick={() => handleQuickAction(action.path)}
+              className="flex flex-col items-center p-4 rounded-xl border border-gray-100 hover:border-red-200 hover:bg-red-50 transition-all duration-200 group"
+            >
+              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-xl mb-3 ${action.color}`}>
+                {action.icon}
+              </div>
+              <div className="text-center">
+                <p className="font-semibold text-gray-900 group-hover:text-red-600 text-sm leading-tight">
+                  {action.title}
+                </p>
+                <p className="text-xs text-gray-500 mt-1 leading-tight">
+                  {action.description}
+                </p>
+              </div>
+            </button>
+          ))}
         </div>
+      </div>
 
+      {/* Contas Empresariais e Movimentos Recentes - Partilham espaço em duas colunas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Contas Empresariais */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-center mb-4">
@@ -205,35 +261,35 @@ const BusinessDashboardContent: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Transações Recentes Empresariais */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">Movimentos Recentes</h2>
-          <button className="text-red-600 text-sm font-medium hover:text-red-700">
-            Ver extrato completo
-          </button>
-        </div>
-        <div className="space-y-3">
-          {recentTransactions.map((transaction) => (
-            <div key={transaction.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+        {/* Movimentos Recentes Empresariais */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Movimentos Recentes</h2>
+            <button className="text-red-600 text-sm font-medium hover:text-red-700">
+              Ver extrato completo
+            </button>
+          </div>
+          <div className="space-y-3">
+            {recentTransactions.map((transaction) => (
+              <div key={transaction.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                    }`}>
+                    {getTransactionIcon(transaction.category)}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">{transaction.description}</p>
+                    <p className="text-xs text-gray-500">{transaction.date}</p>
+                  </div>
+                </div>
+                <div className={`font-semibold text-sm ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
                   }`}>
-                  {getTransactionIcon(transaction.category)}
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900 text-sm">{transaction.description}</p>
-                  <p className="text-xs text-gray-500">{transaction.date}</p>
+                  {transaction.type === 'credit' ? '+' : '-'}MZN {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                 </div>
               </div>
-              <div className={`font-semibold text-sm ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                {transaction.type === 'credit' ? '+' : '-'}MZN {Math.abs(transaction.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 

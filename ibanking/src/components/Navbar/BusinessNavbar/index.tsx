@@ -129,19 +129,6 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     }
   };
 
-  // Menu de Acesso Direto - AGORA COM DASHBOARD NO TOPO
-  const quickAccessItems = [
-    { path: '/panel', icon: CiHome, label: currentBusinessTexts.dashboard },
-    { path: '/business/operators', icon: TbUsers, label: currentBusinessTexts.operators },
-    { path: '/business/products', icon: IoCardOutline, label: currentBusinessTexts.myProducts },
-    { path: '/business/transfers/multiple', icon: TbTransfer, label: currentBusinessTexts.transfers },
-    { path: '/business/wallet-transfer', icon: FaWallet, label: currentBusinessTexts.walletTransfer },
-    { path: '/business/payments/suppliers', icon: CiReceipt, label: currentBusinessTexts.paySuppliers },
-    { path: '/business/payments/salaries', icon: IoPeopleOutline, label: currentBusinessTexts.paySalaries },
-    { path: '/business/payments/services', icon: MdOutlinePayments, label: currentBusinessTexts.payServices },
-    { path: '/business/topup', icon: CiMoneyBill, label: currentBusinessTexts.topup },
-  ];
-
   // Menu Empresa
   const companyItems = [
     { path: '/business/company/management', icon: IoBusinessOutline, label: currentBusinessTexts.accountManagement },
@@ -154,8 +141,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/transfers/multiple', icon: TbTransfer, label: currentBusinessTexts.multipleTransfers },
     { path: '/business/transfers/digital-wallet', icon: FaWallet, label: currentBusinessTexts.digitalWallet },
     { path: '/business/transfers/debt-conversion', icon: FaMoneyCheckAlt, label: currentBusinessTexts.debtConversion },
-    { path: '/business/transfers/wallet-transfer', icon: FaWallet, label: currentBusinessTexts.walletTransfer },
-    { path: '/business/transfers/scheduled', icon: CiCalendar, label: currentBusinessTexts.scheduledOperations },
+    { path: '/business/scheduled-transfers', icon: CiCalendar, label: currentBusinessTexts.scheduledOperations },
   ];
 
   // Menu Pagamentos
@@ -269,33 +255,21 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
 
         {/* Menu de Navegação Principal */}
         <div className="flex-1 overflow-y-auto">
-          {/* Acesso Direto - COM DASHBOARD */}
-          <nav className="p-4 space-y-1">
-            <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              {currentBusinessTexts.quickAccess}
-            </p>
-
-            {quickAccessItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => handleNavigation(item.path)}
-                  className={`
-                    flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left
-                    ${isActive
-                      ? 'bg-red-50 text-red-600'
-                      : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Dashboard no topo */}
+          <nav className="p-4 border-b border-gray-100">
+            <button
+              onClick={() => handleNavigation('/panel')}
+              className={`
+                flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left
+                ${location.pathname === '/panel'
+                  ? 'bg-red-50 text-red-600'
+                  : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
+                }
+              `}
+            >
+              <CiHome size={20} />
+              <span>{currentBusinessTexts.dashboard}</span>
+            </button>
           </nav>
 
           {/* Empresa */}

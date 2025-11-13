@@ -1,5 +1,6 @@
 // components/DigitalWalletPayment.tsx
 import React, { useState } from 'react';
+import { MdGroup } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import {
     CiMoneyBill,
@@ -8,7 +9,9 @@ import {
     CiMail,
     CiWarning,
     CiCircleCheck,
-    CiBellOn
+    CiBellOn,
+    CiCalendar,
+    CiRepeat
 } from "react-icons/ci";
 import { TbTransfer } from "react-icons/tb";
 import { BusinessLayout } from '../BusinessLayout';
@@ -26,11 +29,27 @@ interface Transaction {
     notificationContact?: string;
 }
 
+interface RecurringSettings {
+    isRecurring: boolean;
+    frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    startDate: string;
+    endDate?: string;
+    numberOfOccurrences?: number;
+}
+
 const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language }) => {
     const navigate = useNavigate();
     const [operationType, setOperationType] = useState<'single' | 'multiple'>('single');
     const [activeProvider, setActiveProvider] = useState<'mpesa' | 'emola' | 'mkesh'>('mpesa');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Estado para configurações recorrentes
+    const [recurringSettings, setRecurringSettings] = useState<RecurringSettings>({
+        isRecurring: false,
+        frequency: 'monthly',
+        startDate: new Date().toISOString().split('T')[0],
+        numberOfOccurrences: 1
+    });
 
     // Estado para operação única
     const [singleTransaction, setSingleTransaction] = useState<Transaction>({
@@ -94,7 +113,20 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             transferDetails: 'Detalhes da Transferência',
             confirmButton: 'Confirmar e Transferir',
             cancelButton: 'Cancelar',
-            recipient: 'Destinatário'
+            recipient: 'Destinatário',
+            
+            // Novos textos para funcionalidades adicionadas
+            recurringTransfer: 'Transferência Recorrente',
+            makeRecurring: 'Tornar esta transferência recorrente',
+            frequency: 'Frequência',
+            startDate: 'Data de Início',
+            endDate: 'Data de Fim',
+            numberOfOccurrences: 'Número de Ocorrências',
+            daily: 'Diária',
+            weekly: 'Semanal',
+            monthly: 'Mensal',
+            yearly: 'Anual',
+            selectProvider: 'Selecionar Operadora'
         },
         EN: {
             title: 'Digital Wallet',
@@ -134,7 +166,20 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             transferDetails: 'Transfer Details',
             confirmButton: 'Confirm and Transfer',
             cancelButton: 'Cancel',
-            recipient: 'Recipient'
+            recipient: 'Recipient',
+            
+            // New texts for added features
+            recurringTransfer: 'Recurring Transfer',
+            makeRecurring: 'Make this transfer recurring',
+            frequency: 'Frequency',
+            startDate: 'Start Date',
+            endDate: 'End Date',
+            numberOfOccurrences: 'Number of Occurrences',
+            daily: 'Daily',
+            weekly: 'Weekly',
+            monthly: 'Monthly',
+            yearly: 'Yearly',
+            selectProvider: 'Select Provider'
         }
     };
 
@@ -145,14 +190,14 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
         {
             id: 'mpesa',
             name: t.mpesa,
-            image: '/mpesa.png', // Coloque a imagem na pasta public/providers/
+            image: '/mpesa.png',
             fee: 5,
             color: 'from-red-500 to-red-600',
             bgColor: 'bg-red-50',
             borderColor: 'border-red-200',
             textColor: 'text-red-700',
             fallback: (
-                <div className="w-12 h-12 bg-linear-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
                     MPESA
                 </div>
             )
@@ -167,7 +212,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             borderColor: 'border-orange-200',
             textColor: 'text-orange-700',
             fallback: (
-                <div className="w-12 h-12 bg-linear-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
                     EMOLA
                 </div>
             )
@@ -182,7 +227,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             borderColor: 'border-yellow-200',
             textColor: 'text-yellow-700',
             fallback: (
-                <div className="w-12 h-12 bg-linear-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
                     MKESH
                 </div>
             )
@@ -240,6 +285,14 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
         );
     };
 
+    // Atualizar configurações recorrentes
+    const updateRecurringSettings = (field: keyof RecurringSettings, value: any) => {
+        setRecurringSettings(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
     // Calcular total da operação múltipla
     const calculateTotal = () => {
         return multipleTransactions.reduce((total, transaction) => total + (transaction.amount || 0), 0);
@@ -286,6 +339,10 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                     return false;
                 }
             }
+            if (recurringSettings.isRecurring && !recurringSettings.startDate) {
+                alert(language === 'PT' ? 'Data de início é obrigatória para transferências recorrentes' : 'Start date is required for recurring transfers');
+                return false;
+            }
         } else {
             for (const transaction of multipleTransactions) {
                 if (!transaction.phoneNumber || !transaction.amount) {
@@ -319,6 +376,10 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                     }
                 }
             }
+            if (recurringSettings.isRecurring && !recurringSettings.startDate) {
+                alert(language === 'PT' ? 'Data de início é obrigatória para transferências recorrentes' : 'Start date is required for recurring transfers');
+                return false;
+            }
         }
         return true;
     };
@@ -333,16 +394,15 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             // Simular processamento
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const transactionData = operationType === 'single'
-                ? [singleTransaction]
-                : multipleTransactions;
-
-            console.log('Dados da transação:', {
+            const transactionData = {
                 operationType,
-                transactions: transactionData,
+                transactions: operationType === 'single' ? [singleTransaction] : multipleTransactions,
+                recurring: recurringSettings.isRecurring ? recurringSettings : undefined,
                 totalAmount: operationType === 'single' ? singleTransaction.amount : calculateTotal(),
                 totalFee: calculateTotalFee()
-            });
+            };
+
+            console.log('Dados da transação:', transactionData);
 
             alert(t.transferSuccess);
             navigate('/business/transfers/digital-wallet');
@@ -366,7 +426,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                         {/* Header */}
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
                             <div className="flex items-center space-x-4 mb-4">
-                                <div className="p-3 bg-linear-to-br from-red-600 to-red-700 rounded-xl">
+                                <div className="p-3 bg-gradient-to-br from-red-600 to-red-700 rounded-xl">
                                     <TbTransfer size={28} className="text-white" />
                                 </div>
                                 <div>
@@ -402,7 +462,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                 : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                                                 }`}
                                         >
-                                            <CiUser size={24} className="mx-auto mb-2" />
+                                            <MdGroup size={24} className="mx-auto mb-2" />
                                             <span className="font-medium">{t.multipleOperation}</span>
                                         </button>
                                     </div>
@@ -428,7 +488,6 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                             alt={provider.name}
                                                             className="w-full h-full object-contain p-2"
                                                             onError={(e) => {
-                                                                // Se a imagem não carregar, mostrar fallback
                                                                 e.currentTarget.style.display = 'none';
                                                             }}
                                                         />
@@ -436,11 +495,94 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                     {provider.fallback && !provider.image && provider.fallback}
                                                 </div>
                                                 <span className="font-medium block">{provider.name}</span>
-                                                <span className="text-sm opacity-75">
-                                                    {provider.fee} MT {t.transactionFee.toLowerCase()}
-                                                </span>
                                             </button>
                                         ))}
+                                    </div>
+                                </div>
+
+                                {/* Transferência Recorrente - Para ambos os tipos de operação */}
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                        <CiRepeat className="mr-2 text-red-600" size={20} />
+                                        {t.recurringTransfer}
+                                    </h3>
+                                    
+                                    <div className="space-y-4">
+                                        <label className="flex items-center space-x-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                checked={recurringSettings.isRecurring}
+                                                onChange={(e) => updateRecurringSettings('isRecurring', e.target.checked)}
+                                                className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
+                                            />
+                                            <span className="font-medium text-gray-900">{t.makeRecurring}</span>
+                                        </label>
+
+                                        {recurringSettings.isRecurring && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        {t.frequency} *
+                                                    </label>
+                                                    <select
+                                                        value={recurringSettings.frequency}
+                                                        onChange={(e) => updateRecurringSettings('frequency', e.target.value)}
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    >
+                                                        <option value="daily">{t.daily}</option>
+                                                        <option value="weekly">{t.weekly}</option>
+                                                        <option value="monthly">{t.monthly}</option>
+                                                        <option value="yearly">{t.yearly}</option>
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        {t.startDate} *
+                                                    </label>
+                                                    <div className="relative">
+                                                        <CiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                                        <input
+                                                            type="date"
+                                                            value={recurringSettings.startDate}
+                                                            onChange={(e) => updateRecurringSettings('startDate', e.target.value)}
+                                                            min={new Date().toISOString().split('T')[0]}
+                                                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        {t.numberOfOccurrences}
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        value={recurringSettings.numberOfOccurrences}
+                                                        onChange={(e) => updateRecurringSettings('numberOfOccurrences', parseInt(e.target.value) || 1)}
+                                                        min="1"
+                                                        max="365"
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        {t.endDate}
+                                                    </label>
+                                                    <div className="relative">
+                                                        <CiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                                        <input
+                                                            type="date"
+                                                            value={recurringSettings.endDate || ''}
+                                                            onChange={(e) => updateRecurringSettings('endDate', e.target.value)}
+                                                            min={recurringSettings.startDate}
+                                                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -652,6 +794,24 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                                 />
                                                             </div>
                                                         </div>
+
+                                                        {/* Dropdown para seleção de operadora por destinatário */}
+                                                        <div className="md:col-span-2">
+                                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                                {t.selectProvider} *
+                                                            </label>
+                                                            <select
+                                                                value={transaction.provider}
+                                                                onChange={(e) => updateMultipleTransaction(index, 'provider', e.target.value)}
+                                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            >
+                                                                {providers.map(provider => (
+                                                                    <option key={provider.id} value={provider.id}>
+                                                                        {provider.name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
                                                     </div>
 
                                                     {/* Notificação para cada receptor - Operação Múltipla */}
@@ -771,22 +931,62 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                     </h3>
 
                                     <div className="space-y-3">
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">{t.provider}:</span>
-                                            <span className="font-medium">
-                                                {currentProvider?.name}
-                                            </span>
-                                        </div>
+                                        {operationType === 'single' ? (
+                                            <>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">{t.provider}:</span>
+                                                    <span className="font-medium">
+                                                        {currentProvider?.name}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">{t.transactionFee}:</span>
+                                                    <span className="font-medium">
+                                                        {currentProvider?.fee} MT
+                                                    </span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Número de destinatários:</span>
+                                                    <span className="font-medium">
+                                                        {multipleTransactions.length}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">{t.transactionFee}:</span>
+                                                    <span className="font-medium">
+                                                        {calculateTotalFee()} MT
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )}
 
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">{t.transactionFee}:</span>
-                                            <span className="font-medium">
-                                                {operationType === 'single'
-                                                    ? `${currentProvider?.fee} MT`
-                                                    : `${calculateTotalFee()} MT`
-                                                }
-                                            </span>
-                                        </div>
+                                        {recurringSettings.isRecurring && (
+                                            <div className="border-t border-gray-200 pt-3">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-600">{t.frequency}:</span>
+                                                    <span className="font-medium capitalize">
+                                                        {recurringSettings.frequency}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-600">{t.startDate}:</span>
+                                                    <span className="font-medium">
+                                                        {new Date(recurringSettings.startDate).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                {recurringSettings.numberOfOccurrences && (
+                                                    <div className="flex justify-between text-sm">
+                                                        <span className="text-gray-600">{t.numberOfOccurrences}:</span>
+                                                        <span className="font-medium">
+                                                            {recurringSettings.numberOfOccurrences}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
 
                                         <div className="flex justify-between text-lg font-bold pt-3 border-t border-gray-200">
                                             <span>{t.totalAmount}:</span>
@@ -811,7 +1011,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                         <button
                                             onClick={handleSubmit}
                                             disabled={isSubmitting}
-                                            className="w-full bg-linear-to-br from-red-600 to-red-700 text-white py-3 px-4 rounded-xl font-medium hover:from-red-700 hover:to-red-800 disabled:from-red-300 disabled:to-red-400 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
+                                            className="w-full bg-gradient-to-br from-red-600 to-red-700 text-white py-3 px-4 rounded-xl font-medium hover:from-red-700 hover:to-red-800 disabled:from-red-300 disabled:to-red-400 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
                                         >
                                             {isSubmitting ? (
                                                 <>
@@ -836,7 +1036,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                 </div>
 
                                 {/* Informações Adicionais */}
-                                <div className="bg-linear-to-br from-red-50 to-red-100 border border-red-200 rounded-xl p-4">
+                                <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-xl p-4">
                                     <div className="flex items-start space-x-3">
                                         <CiBellOn className="text-red-600 mt-0.5" size={20} />
                                         <div>
