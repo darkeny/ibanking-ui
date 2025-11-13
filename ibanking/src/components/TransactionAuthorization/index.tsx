@@ -379,7 +379,7 @@ const TransactionCard: React.FC<{
   onReject: (id: string, reason: string) => void;
   language: 'PT' | 'EN';
   texts: any;
-}> = ({ transaction, onApprove, onReject, language, texts }) => {
+}> = ({ transaction, onApprove, onReject, texts }) => {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
 
@@ -512,7 +512,7 @@ const HistoryCard: React.FC<{
   transaction: Transaction;
   language: 'PT' | 'EN';
   texts: any;
-}> = ({ transaction, language, texts }) => {
+}> = ({ transaction, texts }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved': return 'bg-green-100 text-green-800';

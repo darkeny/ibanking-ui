@@ -10,7 +10,6 @@ import NotFound from '../pages/NotFound';
 import NotificationPreferences from '../components/NotificationPreferences';
 import DigitalWalletPayment from '../components/DigitalWalletPayment';
 import TransactionAuthorization from '../components/TransactionAuthorization';
-import BusinessDashboardContent from '../pages/Panel/BusinessPanel';
 import Signup from '../pages/Signup';
 import ScheduledTransfers from '../pages/Business/ScheduledTransfers';
 import ComingSoon from '../pages/ComingSoon';

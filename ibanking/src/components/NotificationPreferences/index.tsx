@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CiBellOn, CiMail, CiMobile3, CiLock, CiCalendar, CiMoneyBill } from "react-icons/ci";
-import { businessTexts } from '../../translations/businessNavbar';
 import { BusinessLayout } from '../BusinessLayout';
 
 interface NotificationPreferences {
@@ -22,7 +21,6 @@ interface NotificationPreferencesProps {
 const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ language }) => {
 
     const navigate = useNavigate();
-    const currentTexts = businessTexts[language];
 
     const [preferences, setPreferences] = useState<NotificationPreferences>({
         enabled: false,

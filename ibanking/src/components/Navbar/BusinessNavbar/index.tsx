@@ -12,16 +12,13 @@ import {
   CiCalendar,
   CiReceipt,
   CiCreditCard1,
-  CiMail,
-  CiMobile3,
   CiHome
 } from "react-icons/ci";
 import {
   IoBusinessOutline,
   IoPeopleOutline,
-  IoCardOutline
 } from "react-icons/io5";
-import { TbTransfer, TbUsers } from "react-icons/tb";
+import { TbTransfer } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSavings } from "react-icons/md";
 import { FaWallet, FaMoneyCheckAlt } from "react-icons/fa";
 import { businessTexts } from '../../../translations/businessNavbar';
@@ -60,7 +57,6 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
     empresa: false,
     transferencias: false,
@@ -87,11 +83,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     }
   }, []);
 
-  // Salvar preferências no localStorage
-  const savePreferences = (prefs: NotificationPreferences) => {
-    setNotificationPrefs(prefs);
-    localStorage.setItem('businessNotificationPrefs', JSON.stringify(prefs));
-  };
+
 
   const handleLogout = () => {
     navigate('/');
@@ -121,13 +113,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     }
   };
 
-  const handleAuthorizationClick = () => {
-    // Redirecionar para a página de autorização com verificação de senha
-    navigate('/business/authorization');
-    if (window.innerWidth < 1024) {
-      onToggle();
-    }
-  };
+
 
   // Menu Empresa
   const companyItems = [
