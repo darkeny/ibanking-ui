@@ -12,7 +12,7 @@ const BusinessDashboardContent: React.FC = () => {
       description: 'Realizar transferências',
       icon: '↗️',
       color: 'bg-red-50 text-red-600',
-      path: '/business/transfers'
+      path: '/business/transfers/multiple'
     },
     {
       title: 'Pagamentos',
@@ -54,7 +54,7 @@ const BusinessDashboardContent: React.FC = () => {
       description: 'Transferências para carteira',
       icon: '👛',
       color: 'bg-teal-50 text-teal-600',
-      path: '/business/wallet-transfer'
+      path: '/business/transfers/digital-wallet'
     },
     {
       title: 'Pag. Fornecedores',
