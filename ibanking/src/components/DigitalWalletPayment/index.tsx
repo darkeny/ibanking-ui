@@ -89,7 +89,6 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             notificationMethod: 'Método de Notificação',
             viaSMS: 'Via SMS',
             viaEmail: 'Via Email',
-            contactInfo: 'Contacto para notificação',
             enterPhone: 'Digite o número de telemóvel',
             enterEmail: 'Digite o email',
             addRecipient: 'Adicionar Destinatário',
@@ -114,7 +113,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             confirmButton: 'Confirmar e Transferir',
             cancelButton: 'Cancelar',
             recipient: 'Destinatário',
-            
+
             // Novos textos para funcionalidades adicionadas
             recurringTransfer: 'Transferência Recorrente',
             makeRecurring: 'Tornar esta transferência recorrente',
@@ -142,7 +141,6 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             notificationMethod: 'Notification Method',
             viaSMS: 'Via SMS',
             viaEmail: 'Via Email',
-            contactInfo: 'Contact for notification',
             enterPhone: 'Enter phone number',
             enterEmail: 'Enter email address',
             addRecipient: 'Add Recipient',
@@ -167,7 +165,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
             confirmButton: 'Confirm and Transfer',
             cancelButton: 'Cancel',
             recipient: 'Recipient',
-            
+
             // New texts for added features
             recurringTransfer: 'Recurring Transfer',
             makeRecurring: 'Make this transfer recurring',
@@ -506,7 +504,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                         <CiRepeat className="mr-2 text-red-600" size={20} />
                                         {t.recurringTransfer}
                                     </h3>
-                                    
+
                                     <div className="space-y-4">
                                         <label className="flex items-center space-x-3 cursor-pointer">
                                             <input
@@ -684,20 +682,10 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                                 </div>
 
                                                                 <div>
-                                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                                        {t.contactInfo} *
-                                                                    </label>
                                                                     <div className="relative">
                                                                         {singleTransaction.notificationMethod === 'sms' ? (
                                                                             <>
-                                                                                <CiMobile3 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                                                                <input
-                                                                                    type="tel"
-                                                                                    value={singleTransaction.notificationContact || ''}
-                                                                                    onChange={(e) => updateSingleTransaction('notificationContact', e.target.value)}
-                                                                                    placeholder={t.enterPhone}
-                                                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                                                                />
+
                                                                             </>
                                                                         ) : (
                                                                             <>
@@ -859,20 +847,10 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                                                                         </div>
 
                                                                         <div>
-                                                                            <label className="block text-xs font-medium text-gray-700 mb-2">
-                                                                                {t.contactInfo} *
-                                                                            </label>
                                                                             <div className="relative">
                                                                                 {transaction.notificationMethod === 'sms' ? (
                                                                                     <>
-                                                                                        <CiMobile3 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                                                                                        <input
-                                                                                            type="tel"
-                                                                                            value={transaction.notificationContact || ''}
-                                                                                            onChange={(e) => updateMultipleTransaction(index, 'notificationContact', e.target.value)}
-                                                                                            placeholder={t.enterPhone}
-                                                                                            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                                                                        />
+
                                                                                     </>
                                                                                 ) : (
                                                                                     <>

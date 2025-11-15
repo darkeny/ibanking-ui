@@ -289,8 +289,8 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
     // Obter cor do status
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'active': return 'bg-green-100 text-green-800 border border-green-200';
-            case 'deleted': return 'bg-red-100 text-red-800 border border-red-200';
+            case 'active': return 'bg-green-100 text-green-800';
+            case 'deleted': return 'bg-red-100 text-red-800';
             default: return 'bg-gray-100 text-gray-800';
         }
     };
@@ -347,14 +347,14 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
         }
     };
 
-    // Obter cor do card baseado no tipo
+    // Obter cor do card baseado no tipo (agora usando cores mais suaves)
     const getCardColor = (type: string) => {
         switch (type) {
-            case 'wallet': return 'border-l-4 border-l-blue-500';
-            case 'bank': return 'border-l-4 border-l-green-500';
-            case 'international': return 'border-l-4 border-l-purple-500';
-            case 'supplier': return 'border-l-4 border-l-orange-500';
-            default: return 'border-l-4 border-l-gray-500';
+            case 'wallet': return 'border border-blue-200 bg-white';
+            case 'bank': return 'border border-green-200 bg-white';
+            case 'international': return 'border border-purple-200 bg-white';
+            case 'supplier': return 'border border-orange-200 bg-white';
+            default: return 'border border-gray-200 bg-white';
         }
     };
 
@@ -386,11 +386,11 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
         <BusinessLayout>
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center space-x-4">
-                            <div className="p-3 bg-linear-to-br from-red-600 to-red-700 rounded-xl shadow-lg">
-                                <CiCalendar size={32} className="text-white" />
+                            <div className="p-3 bg-gray-100 rounded-xl">
+                                <CiCalendar size={32} className="text-gray-700" />
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-900">{t.title}</h1>
@@ -399,7 +399,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                         </div>
                         <button
                             onClick={handleCreateNew}
-                            className="bg-gradient-to-br from-red-600 to-red-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+                            className="bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                             {t.createNew}
                         </button>
@@ -414,7 +414,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                                     onClick={() => setActiveTab(tab)}
                                     className={`py-3 px-4 border-b-2 font-semibold text-lg transition-all duration-200 ${
                                         activeTab === tab
-                                            ? 'border-red-500 text-red-600 bg-red-50 rounded-t-lg'
+                                            ? 'border-red-500 text-red-600'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
                                 >
@@ -456,7 +456,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                     {/* Lista de Transferências */}
                     <div className="grid gap-6">
                         {filteredTransfers.length === 0 ? (
-                            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-16 text-center">
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-16 text-center">
                                 <CiCalendar size={64} className="text-gray-300 mx-auto mb-6" />
                                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                                     {t.noTransfers}
@@ -476,7 +476,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                             filteredTransfers.map(transfer => (
                                 <div 
                                     key={transfer.id} 
-                                    className={`bg-white rounded-2xl shadow-lg border border-gray-200 p-6 transition-all duration-300 hover:shadow-xl ${getCardColor(transfer.type)}`}
+                                    className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md ${getCardColor(transfer.type)}`}
                                 >
                                     <div className="flex items-start justify-between mb-6">
                                         <div className="flex-1">
@@ -586,7 +586,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                                         <div className="flex items-center space-x-2 ml-6">
                                             <button
                                                 onClick={() => setSelectedTransfer(selectedTransfer?.id === transfer.id ? null : transfer)}
-                                                className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-all duration-200"
                                                 title={t.viewDetails}
                                             >
                                                 <MdOutlineKeyboardArrowDown size={24} />
@@ -595,7 +595,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                                             {activeTab === 'active' && (
                                                 <button
                                                     onClick={() => handleDelete(transfer.id)}
-                                                    className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                    className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                                                     title={t.delete}
                                                 >
                                                     <CiTrash size={24} />
@@ -610,7 +610,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                                             <h4 className="text-lg font-bold text-gray-900 mb-4">{t.transactions}</h4>
                                             <div className="space-y-4">
                                                 {transfer.transactions.map(transaction => (
-                                                    <div key={transaction.id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                                                    <div key={transaction.id} className="bg-white border border-gray-200 rounded-xl p-4">
                                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                                             {transaction.phoneNumber && (
                                                                 <div>
@@ -649,9 +649,9 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                                                             <div>
                                                                 <span className="text-sm font-medium text-gray-500">{t.transactionStatus}:</span>
                                                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                                                    transaction.status === 'completed' ? 'bg-green-100 text-green-800 border border-green-200' :
-                                                                    transaction.status === 'failed' ? 'bg-red-100 text-red-800 border border-red-200' :
-                                                                    'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                                                                    transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                                    transaction.status === 'failed' ? 'bg-red-100 text-red-800' :
+                                                                    'bg-yellow-100 text-yellow-800'
                                                                 }`}>
                                                                     {transaction.status === 'completed' ? t.completed :
                                                                      transaction.status === 'failed' ? t.failed : t.pending}
@@ -672,7 +672,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                 {/* Modal de Confirmação de Eliminação */}
                 {showDeleteModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+                        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-xl">
                             <div className="flex items-center space-x-4 mb-6">
                                 <div className="p-3 bg-red-100 rounded-xl">
                                     <CiWarning className="text-red-600" size={28} />
@@ -689,13 +689,13 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                             <div className="flex space-x-4">
                                 <button
                                     onClick={confirmDelete}
-                                    className="flex-1 bg-red-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                                    className="flex-1 bg-red-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-red-700 transition-all duration-200"
                                 >
                                     {t.confirm}
                                 </button>
                                 <button
                                     onClick={() => setShowDeleteModal(false)}
-                                    className="flex-1 border-2 border-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
+                                    className="flex-1 border border-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
                                 >
                                     {t.cancelDelete}
                                 </button>

@@ -23,17 +23,35 @@ const BusinessMultipleTransfers: React.FC = () => {
     });
     const [transfers, setTransfers] = useState<TransferItem[]>([]);
     const [showImportModal, setShowImportModal] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [showQRModal, setShowQRModal] = useState(false);
+    const [showAPIModal, setShowAPIModal] = useState(false);
+    const [emailData, setEmailData] = useState({
+        email: '',
+        subject: 'Extrato de Transferências Múltiplas',
+        message: ''
+    });
+    const [emailSent, setEmailSent] = useState(false);
+    const [apiLink, setApiLink] = useState('');
 
     const accounts = [
         { id: '1', name: 'Conta Principal Empresa', number: 'PT50 1234 5678 9012 3456 7890', balance: 25420.15 },
         { id: '2', name: 'Conta Operações', number: 'PT50 1234 5678 9012 3456 7891', balance: 125000.75 },
     ];
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+        }));
+    };
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setEmailData(prev => ({
+            ...prev,
+            [name]: value
         }));
     };
 
@@ -54,10 +72,9 @@ const BusinessMultipleTransfers: React.FC = () => {
             if (transfer.id === id) {
                 const updated = { ...transfer, [field]: value };
 
-                // Validar dados em tempo real
                 if (field === 'nib' || field === 'amount') {
                     if (updated.nib && updated.amount) {
-                        const nibValid = updated.nib.length === 25; // Validar formato NIB
+                        const nibValid = updated.nib.length === 25;
                         const amountValid = !isNaN(parseFloat(updated.amount)) && parseFloat(updated.amount) > 0;
 
                         if (nibValid && amountValid) {
@@ -84,14 +101,12 @@ const BusinessMultipleTransfers: React.FC = () => {
         setTransfers(prev => prev.filter(transfer => transfer.id !== id));
     };
 
-    // Funções para importação de arquivo
     const handleFileUpload = (file: File) => {
         if (!file.name.match(/\.(xlsx|xls|csv)$/)) {
             alert('Por favor, selecione um arquivo Excel ou CSV válido.');
             return;
         }
 
-        // Simular processamento do arquivo Excel
         const mockTransfers: TransferItem[] = [
             {
                 id: '1',
@@ -116,15 +131,6 @@ const BusinessMultipleTransfers: React.FC = () => {
                 amount: '4200.75',
                 description: 'Consultoria Q1',
                 status: 'valid'
-            },
-            {
-                id: '4',
-                nib: 'INVALID_NIB',
-                name: 'Fornecedor D',
-                amount: '1000.00',
-                description: 'Serviços diversos',
-                status: 'error',
-                error: 'NIB inválido'
             }
         ];
 
@@ -153,7 +159,6 @@ const BusinessMultipleTransfers: React.FC = () => {
         if (step === 1 && transfers.length > 0 && getValidTransfers().length > 0 && formData.fromAccount) {
             setStep(2);
         } else if (step === 2) {
-            // Simular processamento das transferências
             setTimeout(() => {
                 setStep(3);
             }, 3000);
@@ -172,6 +177,121 @@ const BusinessMultipleTransfers: React.FC = () => {
             scheduled: false,
             scheduleDate: ''
         });
+        setEmailSent(false);
+        setEmailData({
+            email: '',
+            subject: 'Extrato de Transferências Múltiplas',
+            message: ''
+        });
+    };
+
+    const generateBatchReference = () => {
+        return `BATCH_${Date.now()}`;
+    };
+
+    const downloadPDFExtract = () => {
+        const batchRef = generateBatchReference();
+        const totalAmount = getTotalAmount();
+        
+        const pdfContent = `
+            EXTRATO DE TRANSFERÊNCIAS MÚLTIPLAS
+            ===================================
+            
+            Referência: ${batchRef}
+            Data: ${new Date().toLocaleDateString('pt-PT')} ${new Date().toLocaleTimeString('pt-PT')}
+            Conta Origem: ${accounts.find(acc => acc.id === formData.fromAccount)?.name}
+            Total Transferências: ${getValidTransfers().length}
+            Valor Total: MZN ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+            
+            DETALHES DAS TRANSFERÊNCIAS:
+            ${getValidTransfers().map((transfer, index) => `
+            ${index + 1}. ${transfer.name}
+               NIB: ${transfer.nib}
+               Valor: MZN ${parseFloat(transfer.amount).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+               Descrição: ${transfer.description}
+            `).join('')}
+            
+            ===================================
+            Your Bank Business - Luwali Technologies
+        `;
+
+        const blob = new Blob([pdfContent], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `extrato_transferencias_${batchRef}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert('Extrato PDF descarregado com sucesso!');
+    };
+
+    const handleSendEmail = () => {
+        if (!emailData.email) {
+            alert('Por favor, insira um endereço de email válido.');
+            return;
+        }
+
+        // Simular envio de email
+        setTimeout(() => {
+            setEmailSent(true);
+            setShowEmailModal(false);
+            alert(`Extrato enviado com sucesso para: ${emailData.email}`);
+        }, 2000);
+    };
+
+    const generateQRCode = () => {
+        setShowQRModal(true);
+    };
+
+    const generateAPILink = () => {
+        const batchRef = generateBatchReference();
+        const link = `https://ibanking-ui.vercel.app/api/transfers/${batchRef}`;
+        setApiLink(link);
+        setShowAPIModal(true);
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copiado para a área de transferência!');
+        });
+    };
+
+    // Componente Modal Reutilizável
+    const Modal = ({ isOpen, onClose, title, children }: { 
+        isOpen: boolean; 
+        onClose: () => void; 
+        title: string; 
+        children: React.ReactNode;
+    }) => {
+        if (!isOpen) return null;
+
+        return (
+            <div
+                className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm"
+                onClick={onClose}
+            >
+                <div
+                    className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+                        <button
+                            onClick={onClose}
+                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    {children}
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -452,11 +572,82 @@ const BusinessMultipleTransfers: React.FC = () => {
                                     <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Referência do Lote:</span>
-                                            <span className="font-mono">BATCH_{Date.now()}</span>
+                                            <span className="font-mono">{generateBatchReference()}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Data:</span>
                                             <span>{new Date().toLocaleDateString('pt-PT')} {new Date().toLocaleTimeString('pt-PT')}</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Novas Opções de Extrato */}
+                                    <div className="bg-white border border-gray-200 rounded-xl p-6">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Opções de Extrato</h3>
+                                        
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Download PDF */}
+                                            <button
+                                                onClick={downloadPDFExtract}
+                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-red-300 hover:bg-red-50 transition-colors text-left"
+                                            >
+                                                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-gray-900">Download PDF</div>
+                                                    <div className="text-sm text-gray-600">Baixar extrato em formato PDF</div>
+                                                </div>
+                                            </button>
+
+                                            {/* Enviar por Email */}
+                                            <button
+                                                onClick={() => setShowEmailModal(true)}
+                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors text-left"
+                                            >
+                                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-gray-900">Enviar por Email</div>
+                                                    <div className="text-sm text-gray-600">Receber extrato no seu email</div>
+                                                </div>
+                                            </button>
+
+                                            {/* QR Code */}
+                                            <button
+                                                onClick={generateQRCode}
+                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors text-left"
+                                            >
+                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-gray-900">Gerar QR Code</div>
+                                                    <div className="text-sm text-gray-600">Código para partilha rápida</div>
+                                                </div>
+                                            </button>
+
+                                            {/* API Integration */}
+                                            <button
+                                                onClick={generateAPILink}
+                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"
+                                            >
+                                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-gray-900">Integração API</div>
+                                                    <div className="text-sm text-gray-600">Partilhar dados via API</div>
+                                                </div>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -564,82 +755,188 @@ const BusinessMultipleTransfers: React.FC = () => {
             </div>
 
             {/* Modal de Importação */}
-            {showImportModal && (
-                <div
-                    className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm"
-                    onClick={() => setShowImportModal(false)}
-                >
-                    <div
-                        className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
-                        onClick={(e) => e.stopPropagation()} // impede fechar ao clicar dentro
-                    >
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Importar do Excel</h3>
-                            <button
-                                onClick={() => setShowImportModal(false)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+            <Modal isOpen={showImportModal} onClose={() => setShowImportModal(false)} title="Importar do Excel">
+                <div className="space-y-4">
+                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
                         </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                            Selecione um ficheiro Excel (.xlsx, .xls) ou CSV
+                        </p>
+                        <input
+                            type="file"
+                            id="file-upload-modal"
+                            accept=".xlsx,.xls,.csv"
+                            onChange={handleFileInput}
+                            className="hidden"
+                        />
+                        <label
+                            htmlFor="file-upload-modal"
+                            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold cursor-pointer hover:bg-red-700 transition-colors"
+                        >
+                            Selecionar Ficheiro
+                        </label>
+                    </div>
 
-                        <div className="space-y-4">
-                            {/* Área de upload */}
-                            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
-                                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                    </svg>
-                                </div>
-                                <p className="text-sm text-gray-600 mb-3">
-                                    Selecione um ficheiro Excel (.xlsx, .xls) ou CSV
-                                </p>
-                                <input
-                                    type="file"
-                                    id="file-upload-modal"
-                                    accept=".xlsx,.xls,.csv"
-                                    onChange={handleFileInput}
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="file-upload-modal"
-                                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold cursor-pointer hover:bg-red-700 transition-colors"
-                                >
-                                    Selecionar Ficheiro
-                                </label>
-                            </div>
+                    <div className="bg-red-50 rounded-lg p-3">
+                        <h4 className="font-semibold text-red-900 text-sm mb-1">Formato esperado:</h4>
+                        <p className="text-red-700 text-xs">
+                            Colunas: NIB (25 caracteres), Nome, Valor, Descrição (opcional)
+                        </p>
+                    </div>
 
-                            {/* Informação de formato */}
-                            <div className="bg-red-50 rounded-lg p-3">
-                                <h4 className="font-semibold text-red-900 text-sm mb-1">Formato esperado:</h4>
-                                <p className="text-red-700 text-xs">
-                                    Colunas: NIB (25 caracteres), Nome, Valor, Descrição (opcional)
-                                </p>
-                            </div>
-
-                            {/* Botões */}
-                            <div className="flex space-x-3">
-                                <button
-                                    onClick={() => setShowImportModal(false)}
-                                    className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        alert('Template descarregado!');
-                                    }}
-                                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors"
-                                >
-                                    Descarregar Template
-                                </button>
-                            </div>
-                        </div>
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => setShowImportModal(false)}
+                            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={() => {
+                                alert('Template descarregado!');
+                            }}
+                            className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                        >
+                            Descarregar Template
+                        </button>
                     </div>
                 </div>
-            )}
+            </Modal>
+
+            {/* Modal de Email */}
+            <Modal isOpen={showEmailModal} onClose={() => setShowEmailModal(false)} title="Enviar Extrato por Email">
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email de Destino
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={emailData.email}
+                            onChange={handleEmailChange}
+                            placeholder="seu@email.com"
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Assunto
+                        </label>
+                        <input
+                            type="text"
+                            name="subject"
+                            value={emailData.subject}
+                            onChange={handleEmailChange}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Mensagem (Opcional)
+                        </label>
+                        <textarea
+                            name="message"
+                            value={emailData.message}
+                            onChange={handleEmailChange}
+                            placeholder="Adicione uma mensagem personalizada..."
+                            rows={3}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => setShowEmailModal(false)}
+                            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={handleSendEmail}
+                            disabled={!emailData.email}
+                            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        >
+                            Enviar Email
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Modal de QR Code */}
+            <Modal isOpen={showQRModal} onClose={() => setShowQRModal(false)} title="QR Code de Partilha">
+                <div className="space-y-4 text-center">
+                    <div className="bg-gray-100 rounded-xl p-8 flex items-center justify-center">
+                        <div className="text-center">
+                            {/* Simulação de QR Code - em produção usar biblioteca como qrcode.react */}
+                            <div className="w-48 h-48 bg-white border-4 border-gray-300 mx-auto mb-4 flex items-center justify-center">
+                                <div className="text-center">
+                                    <div className="text-6xl mb-2">📱</div>
+                                    <div className="text-xs text-gray-500">QR Code</div>
+                                </div>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Aponte a câmara para ler o código
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-blue-50 rounded-lg p-3">
+                        <p className="text-blue-700 text-sm">
+                            <strong>Link:</strong> https://ibanking-ui.vercel.app/
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => copyToClipboard('https://ibanking-ui.vercel.app/')}
+                        className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                    >
+                        Copiar Link
+                    </button>
+                </div>
+            </Modal>
+
+            {/* Modal de API */}
+            <Modal isOpen={showAPIModal} onClose={() => setShowAPIModal(false)} title="Integração API">
+                <div className="space-y-4">
+                    <div className="bg-purple-50 rounded-lg p-4">
+                        <h4 className="font-semibold text-purple-900 mb-2">Link da API</h4>
+                        <p className="text-purple-700 text-sm break-all bg-white p-2 rounded border">
+                            {apiLink}
+                        </p>
+                    </div>
+
+                    <div className="bg-yellow-50 rounded-lg p-3">
+                        <h4 className="font-semibold text-yellow-900 text-sm mb-1">Como usar:</h4>
+                        <ul className="text-yellow-700 text-xs space-y-1">
+                            <li>• Use este link para integração com sistemas externos</li>
+                            <li>• O link contém todos os dados do lote de transferências</li>
+                            <li>• Compatível com REST API</li>
+                        </ul>
+                    </div>
+
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => setShowAPIModal(false)}
+                            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                        >
+                            Fechar
+                        </button>
+                        <button
+                            onClick={() => copyToClipboard(apiLink)}
+                            className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                        >
+                            Copiar Link
+                        </button>
+                    </div>
+                </div>
+            </Modal>
 
         </BusinessLayout>
     );

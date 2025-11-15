@@ -18,7 +18,7 @@ import {
   IoBusinessOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
-import { TbTransfer } from "react-icons/tb";
+import { TbTransfer, TbCheck, TbCreditCard } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSavings } from "react-icons/md";
 import { FaWallet, FaMoneyCheckAlt } from "react-icons/fa";
 import { businessTexts } from '../../../translations/businessNavbar';
@@ -83,8 +83,6 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     }
   }, []);
 
-
-
   const handleLogout = () => {
     navigate('/');
   };
@@ -113,8 +111,6 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     }
   };
 
-
-
   // Menu Empresa
   const companyItems = [
     { path: '/business/company/management', icon: IoBusinessOutline, label: currentBusinessTexts.accountManagement },
@@ -142,9 +138,11 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/payments/bulk', icon: MdOutlinePayments, label: currentBusinessTexts.bulkPayments },
   ];
 
-  // Outros serviços - AGORA COM AUTORIZAÇÃO DE TRANSAÇÕES
+  // Outros serviços - AGORA COM GESTÃO DE CHECKS E CARTÕES Crédito
   const otherServicesItems = [
     { path: '/business/cards', icon: CiCreditCard1, label: currentBusinessTexts.cards },
+    { path: '/business/prepaid-cards', icon: TbCreditCard, label: language === 'PT' ? 'Gerir Cartões de Crédito' : 'Prepaid Cards' },
+    { path: '/business/check-management', icon: TbCheck, label: language === 'PT' ? 'Gestão de Checks' : 'Check Management' },
     { path: '/business/savings', icon: MdOutlineSavings, label: currentBusinessTexts.savings },
     { path: '/business/financing', icon: BsPiggyBank, label: currentBusinessTexts.financing },
     { path: '/business/notifications', icon: CiBellOn, label: currentBusinessTexts.notifications },
@@ -399,7 +397,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
             )}
           </div>
 
-          {/* Outros Serviços - COM AUTORIZAÇÃO DE TRANSAÇÕES */}
+          {/* Outros Serviços - COM GESTÃO DE CHECKS E CARTÕES Crédito */}
           <div className="border-t border-gray-100">
             <button
               onClick={() => toggleSection('outrosServicos')}

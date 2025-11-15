@@ -22,20 +22,6 @@ const BusinessDashboardContent: React.FC = () => {
       path: '/business/payments'
     },
     {
-      title: 'Faturação',
-      description: 'Gestão de faturas',
-      icon: '🧾',
-      color: 'bg-purple-50 text-purple-600',
-      path: '/business/invoicing'
-    },
-    {
-      title: 'Relatórios',
-      description: 'Relatórios financeiros',
-      icon: '📊',
-      color: 'bg-orange-50 text-orange-600',
-      path: '/business/reports'
-    },
-    {
       title: 'Operadores',
       description: 'Gestão de utilizadores',
       icon: '👥',
@@ -52,7 +38,7 @@ const BusinessDashboardContent: React.FC = () => {
     {
       title: 'Carteira Digital',
       description: 'Transferências para carteira',
-      icon: '👛',
+      icon: '💼',
       color: 'bg-teal-50 text-teal-600',
       path: '/business/transfers/digital-wallet'
     },
@@ -78,7 +64,7 @@ const BusinessDashboardContent: React.FC = () => {
       path: '/business/payments/services'
     },
     {
-      title: 'Carregamentos',
+      title: 'Recargas',
       description: 'Carregar contas',
       icon: '📱',
       color: 'bg-pink-50 text-pink-600',
@@ -178,33 +164,30 @@ const BusinessDashboardContent: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Receitas Totais</p>
+              <p className="text-sm text-gray-600">Créditos</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalRevenue.toLocaleString('pt-PT')}</p>
             </div>
             <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">📈</span>
-            </div>
-          </div>
-          <p className="text-xs text-green-600 mt-2">+12% vs último mês</p>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Despesas Totais</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalExpenses.toLocaleString('pt-PT')}</p>
-            </div>
-            <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center">
               <span className="text-2xl">📉</span>
             </div>
           </div>
-          <p className="text-xs text-red-600 mt-2">-5% vs último mês</p>
+        </div>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Débitos</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalExpenses.toLocaleString('pt-PT')}</p>
+            </div>
+            <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center">
+              <span className="text-2xl">📈</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Operações Empresariais - Ocupa coluna completa */}
+      {/* Operações Favoritas - Ocupa coluna completa */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Operações Empresariais</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Operações Favoritas</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {quickActions.map((action, index) => (
             <button
