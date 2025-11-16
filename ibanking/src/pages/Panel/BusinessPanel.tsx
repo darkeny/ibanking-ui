@@ -1,8 +1,6 @@
-// pages/BusinessPanel.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Componente para o conteúdo do dashboard empresarial
 const BusinessDashboardContent: React.FC = () => {
   const navigate = useNavigate();
 
@@ -22,20 +20,6 @@ const BusinessDashboardContent: React.FC = () => {
       path: '/business/payments'
     },
     {
-      title: 'Faturação',
-      description: 'Gestão de faturas',
-      icon: '🧾',
-      color: 'bg-purple-50 text-purple-600',
-      path: '/business/invoicing'
-    },
-    {
-      title: 'Relatórios',
-      description: 'Relatórios financeiros',
-      icon: '📊',
-      color: 'bg-orange-50 text-orange-600',
-      path: '/business/reports'
-    },
-    {
       title: 'Operadores',
       description: 'Gestão de utilizadores',
       icon: '👥',
@@ -52,7 +36,7 @@ const BusinessDashboardContent: React.FC = () => {
     {
       title: 'Carteira Digital',
       description: 'Transferências para carteira',
-      icon: '👛',
+      icon: '💼',
       color: 'bg-teal-50 text-teal-600',
       path: '/business/transfers/digital-wallet'
     },
@@ -78,7 +62,7 @@ const BusinessDashboardContent: React.FC = () => {
       path: '/business/payments/services'
     },
     {
-      title: 'Carregamentos',
+      title: 'Recargas',
       description: 'Carregar contas',
       icon: '📱',
       color: 'bg-pink-50 text-pink-600',
@@ -117,17 +101,6 @@ const BusinessDashboardContent: React.FC = () => {
 
   const handleQuickAction = (path: string) => {
     navigate(path);
-  };
-
-  const getTransactionIcon = (category: string) => {
-    const icons: { [key: string]: string } = {
-      supplier: '🏢',
-      revenue: '💸',
-      salaries: '👥',
-      utilities: '⚡',
-      rent: '🏠'
-    };
-    return icons[category] || '💼';
   };
 
   return (
@@ -178,33 +151,34 @@ const BusinessDashboardContent: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Receitas Totais</p>
+              <p className="text-sm text-gray-600">Créditos</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalRevenue.toLocaleString('pt-PT')}</p>
             </div>
             <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">📈</span>
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
             </div>
           </div>
-          <p className="text-xs text-green-600 mt-2">+12% vs último mês</p>
         </div>
-
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Despesas Totais</p>
+              <p className="text-sm text-gray-600">Débitos</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">MZN {financialOverview.totalExpenses.toLocaleString('pt-PT')}</p>
             </div>
             <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center">
-              <span className="text-2xl">📉</span>
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
             </div>
           </div>
-          <p className="text-xs text-red-600 mt-2">-5% vs último mês</p>
         </div>
       </div>
 
-      {/* Operações Empresariais - Ocupa coluna completa */}
+      {/* Operações Favoritas */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Operações Empresariais</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">Operações Favoritas</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {quickActions.map((action, index) => (
             <button
@@ -228,7 +202,7 @@ const BusinessDashboardContent: React.FC = () => {
         </div>
       </div>
 
-      {/* Contas Empresariais e Movimentos Recentes - Partilham espaço em duas colunas */}
+      {/* Contas Empresariais e Movimentos Recentes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Contas Empresariais */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -243,8 +217,8 @@ const BusinessDashboardContent: React.FC = () => {
               <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center space-x-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${account.type === 'current' ? 'bg-red-100 text-red-600' :
-                    account.type === 'investment' ? 'bg-green-100 text-green-600' :
-                      'bg-orange-100 text-orange-600'
+                      account.type === 'investment' ? 'bg-green-100 text-green-600' :
+                        'bg-orange-100 text-orange-600'
                     }`}>
                     {account.type === 'current' ? '🏦' : account.type === 'investment' ? '📈' : '⚡'}
                   </div>
@@ -276,7 +250,15 @@ const BusinessDashboardContent: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${transaction.type === 'credit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
                     }`}>
-                    {getTransactionIcon(transaction.category)}
+                    {transaction.type === 'credit' ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 text-sm">{transaction.description}</p>

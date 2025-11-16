@@ -16,7 +16,7 @@ const ClientTransfers: React.FC = () => {
   });
 
   const accounts = [
-    { id: '1', name: 'Conta Ordenado', number: 'PT50 1234 5678 9012 3456 7890', balance: 5420.15 },
+    { id: '1', name: 'Conta Ordenado', number: 'PT50 1234 5678 9012 3456 7890', balance: 450920.15 },
     { id: '2', name: 'Conta Poupança', number: 'PT50 1234 5678 9012 3456 7891', balance: 12500.75 },
   ];
 

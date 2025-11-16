@@ -8,7 +8,7 @@ import {
     CiClock2
 } from "react-icons/ci";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { BusinessLayout } from '../../../components/BusinessLayout';
+import { ClientLayout } from '../../../components/ClientLayout';
 
 interface ScheduledTransfer {
     id: string;
@@ -383,7 +383,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
     };
 
     return (
-        <BusinessLayout>
+        <ClientLayout>
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
@@ -704,7 +704,7 @@ const ScheduledTransfers: React.FC<ScheduledTransfersProps> = ({ language }) => 
                     </div>
                 )}
             </div>
-        </BusinessLayout>
+        </ClientLayout>
     );
 };
 

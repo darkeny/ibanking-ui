@@ -1,7 +1,7 @@
-// pages/BusinessMultipleTransfers.tsx
+// pages/ClientMultipleTransfers.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BusinessLayout } from '../../../components/BusinessLayout';
+import { ClientLayout } from '../../../components/ClientLayout';
 
 interface TransferItem {
     id: string;
@@ -13,7 +13,7 @@ interface TransferItem {
     error?: string;
 }
 
-const BusinessMultipleTransfers: React.FC = () => {
+const ClientMultipleTransfers: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
@@ -295,7 +295,7 @@ const BusinessMultipleTransfers: React.FC = () => {
     };
 
     return (
-        <BusinessLayout>
+        <ClientLayout>
             <div className="max-w-6xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -938,8 +938,8 @@ const BusinessMultipleTransfers: React.FC = () => {
                 </div>
             </Modal>
 
-        </BusinessLayout>
+        </ClientLayout>
     );
 };
 
-export default BusinessMultipleTransfers;
+export default ClientMultipleTransfers;

@@ -40,7 +40,7 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       type: 'transfer',
       amount: 50000,
       recipient: 'João Silva',
-      date: '2024-01-15 14:30',
+      date: '2024-11-17',
       status: 'pending',
       requestedBy: 'Maria Santos'
     },
@@ -49,7 +49,7 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       type: 'payment',
       amount: 25000,
       recipient: 'Fornecedor ABC',
-      date: '2024-01-15 10:15',
+      date: '2024-11-17',
       status: 'pending',
       requestedBy: 'Carlos Lima'
     },
@@ -58,7 +58,7 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       type: 'transfer',
       amount: 15000,
       recipient: 'Ana Costa',
-      date: '2024-01-14 16:45',
+      date: '2024-11-17',
       status: 'approved',
       requestedBy: 'Pedro Alves'
     },
@@ -67,7 +67,7 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       type: 'withdrawal',
       amount: 100000,
       recipient: 'Cash',
-      date: '2024-01-14 09:20',
+      date: '2024-11-17',
       status: 'rejected',
       requestedBy: 'Luisa Fernandes',
       reason: 'Valor acima do limite'

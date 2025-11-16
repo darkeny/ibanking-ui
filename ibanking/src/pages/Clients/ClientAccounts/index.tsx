@@ -10,33 +10,13 @@ const ClientAccounts: React.FC = () => {
       id: '1',
       name: 'Conta Ordenado',
       number: 'PT50 1234 5678 9012 3456 7890',
-      balance: 5420.15,
-      available: 5420.15,
+      balance: 450920.15,
+      available: 450920.15,
       type: 'current',
-      currency: 'EUR',
+      currency: 'MZN',
       status: 'active'
     },
-    {
-      id: '2',
-      name: 'Conta Poupança',
-      number: 'PT50 1234 5678 9012 3456 7891',
-      balance: 12500.75,
-      available: 12500.75,
-      type: 'savings',
-      currency: 'EUR',
-      status: 'active'
-    },
-    {
-      id: '3',
-      name: 'Conta Investimento',
-      number: 'PT50 1234 5678 9012 3456 7892',
-      balance: 8750.30,
-      available: 8750.30,
-      type: 'investment',
-      currency: 'EUR',
-      status: 'active'
-    }
-  ];
+      ];
 
   const getAccountIcon = (type: string) => {
     switch (type) {

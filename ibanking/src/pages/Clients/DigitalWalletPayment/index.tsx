@@ -1,4 +1,4 @@
-// components/DigitalWalletPayment.tsx
+// components/ClientDigitalWalletPayment.tsx
 import React, { useState } from 'react';
 import { MdGroup } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
@@ -14,9 +14,8 @@ import {
     CiRepeat
 } from "react-icons/ci";
 import { TbTransfer } from "react-icons/tb";
-import { BusinessLayout } from '../BusinessLayout';
-
-interface DigitalWalletPaymentProps {
+import { ClientLayout } from '../../../components/ClientLayout';
+interface ClientDigitalWalletPaymentProps {
     language: 'PT' | 'EN';
 }
 
@@ -37,7 +36,7 @@ interface RecurringSettings {
     numberOfOccurrences?: number;
 }
 
-const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language }) => {
+const ClientDigitalWalletPayment: React.FC<ClientDigitalWalletPaymentProps> = ({ language }) => {
     const navigate = useNavigate();
     const [operationType, setOperationType] = useState<'single' | 'multiple'>('single');
     const [activeProvider, setActiveProvider] = useState<'mpesa' | 'emola' | 'mkesh'>('mpesa');
@@ -417,7 +416,7 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
 
     return (
         <>
-            <BusinessLayout>
+            <ClientLayout>
                 <div className="max-w-6xl mx-auto space-y-6">
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
 
@@ -1034,9 +1033,9 @@ const DigitalWalletPayment: React.FC<DigitalWalletPaymentProps> = ({ language })
                         </div>
                     </div>
                 </div>
-            </BusinessLayout>
+            </ClientLayout>
         </>
     );
 };
 
-export default DigitalWalletPayment;
+export default ClientDigitalWalletPayment;
