@@ -1,6 +1,5 @@
 // pages/Business/PrepaidCards.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { CiCreditCard1, CiMoneyBill, CiUser, CiLock } from "react-icons/ci";
 import { TbCreditCard, TbPlus } from "react-icons/tb";
 import { BusinessLayout } from '../../../components/BusinessLayout';
@@ -21,8 +20,7 @@ interface PrepaidCardsProps {
   language: 'PT' | 'EN';
 }
 
-const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
-  const navigate = useNavigate();
+const CreditCards: React.FC<PrepaidCardsProps> = ({ language }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'blocked' | 'expired'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -34,7 +32,7 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
       activeCards: 'Ativos',
       blockedCards: 'Bloqueados',
       expiredCards: 'Expirados',
-      issueNewCard: 'Requisitar novo livro',
+      issueNewCard: 'Associar novo',
       cardNumber: 'Número do Cartão',
       holderName: 'Titular',
       balance: 'Saldo',
@@ -62,7 +60,7 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
       activeCards: 'Active',
       blockedCards: 'Blocked',
       expiredCards: 'Expired',
-      issueNewCard: 'Issue New Card',
+      issueNewCard: 'Issue New',
       cardNumber: 'Card Number',
       holderName: 'Holder Name',
       balance: 'Balance',
@@ -136,12 +134,12 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
   ]);
 
   const filteredCards = cards.filter(card => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
       card.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       card.holderName.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesTab = activeTab === 'all' || card.status === activeTab;
-    
+
     return matchesSearch && matchesTab;
   });
 
@@ -166,10 +164,10 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
   };
 
   const handleBlockCard = (cardId: string) => {
-    if (window.confirm(language === 'PT' 
-      ? 'Tem certeza que deseja bloquear este cartão?' 
+    if (window.confirm(language === 'PT'
+      ? 'Tem certeza que deseja bloquear este cartão?'
       : 'Are you sure you want to block this card?')) {
-      setCards(cards.map(card => 
+      setCards(cards.map(card =>
         card.id === cardId ? { ...card, status: 'blocked' } : card
       ));
     }
@@ -235,34 +233,6 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
               </div>
             </div>
           </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">{t.totalBalance}</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalBalance.toLocaleString('pt-PT', { style: 'currency', currency: 'MZN' })}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
-                <CiMoneyBill size={24} className="text-blue-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">{t.activeBalance}</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.activeBalance.toLocaleString('pt-PT', { style: 'currency', currency: 'MZN' })}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
-                <CiMoneyBill size={24} className="text-green-600" />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Filtros e Busca */}
@@ -274,11 +244,10 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === tab
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab
                       ? 'bg-white text-red-600 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                    }`}
                 >
                   {t[`${tab}Cards` as keyof typeof t]}
                 </button>
@@ -351,14 +320,14 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
                 </button>
                 {card.status === 'active' && (
                   <>
-                    <button 
+                    <button
                       onClick={() => handleTopUp(card.id)}
                       className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                       title={t.topUp}
                     >
                       <CiMoneyBill size={16} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleBlockCard(card.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title={t.blockCard}
@@ -385,4 +354,4 @@ const PrepaidCards: React.FC<PrepaidCardsProps> = ({ language }) => {
   );
 };
 
-export default PrepaidCards;
+export default CreditCards;

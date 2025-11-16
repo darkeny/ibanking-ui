@@ -144,14 +144,13 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
 
             // Finalização
             finalization: 'Finalização da Conta',
-            accountCreated: 'Conta Criada com Sucesso!',
-            accountNumber: 'Número da Conta',
+            accountCreated: 'Inscrição efectuada!',
+            accountNumber: 'Número de Referência',
             nextSteps: 'Próximos Passos',
             visitBranch: 'Visite uma das nossas agências para activar a sua conta',
             requiredDocuments: 'Leve os seguintes documentos:',
             biOriginal: 'BI Original',
-            documentsSubmitted: 'Documentos submetidos online',
-            keepAccountNumber: 'Guarde o seu número de conta',
+            keepAccountNumber: 'Guarde o seu número de referência',
             printDetails: 'Imprimir Detalhes',
 
             // Validações
@@ -250,14 +249,13 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
 
             // Finalization
             finalization: 'Account Finalization',
-            accountCreated: 'Account Created Successfully!',
-            accountNumber: 'Account Number',
+            accountCreated: 'Registration completed!',
+            accountNumber: 'Reference Number',
             nextSteps: 'Next Steps',
             visitBranch: 'Visit one of our branches to activate your account',
             requiredDocuments: 'Bring the following documents:',
             biOriginal: 'Original ID',
-            documentsSubmitted: 'Documents submitted online',
-            keepAccountNumber: 'Keep your account number safe',
+            keepAccountNumber: 'Keep your Reference Number safe',
             printDetails: 'Print Details',
 
             // Validations
@@ -493,7 +491,6 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
                                 <h4 className="font-medium text-yellow-800 mb-2">{t.requiredDocuments}:</h4>
                                 <ul className="text-sm text-yellow-700 space-y-1">
                                     <li>• {t.biOriginal}</li>
-                                    <li>• {t.documentsSubmitted}</li>
                                 </ul>
                             </div>
 

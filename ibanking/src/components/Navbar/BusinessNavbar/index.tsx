@@ -141,7 +141,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
   // Outros serviços - AGORA COM GESTÃO DE CHECKS E CARTÕES Crédito
   const otherServicesItems = [
     { path: '/business/cards', icon: CiCreditCard1, label: currentBusinessTexts.cards },
-    { path: '/business/prepaid-cards', icon: TbCreditCard, label: language === 'PT' ? 'Gerir Cartões de Crédito' : 'Prepaid Cards' },
+    { path: '/business/credit-cards', icon: TbCreditCard, label: language === 'PT' ? 'Gerir Cartões de Crédito' : 'Credit Cards' },
     { path: '/business/check-management', icon: TbCheck, label: language === 'PT' ? 'Gestão de Checks' : 'Check Management' },
     { path: '/business/savings', icon: MdOutlineSavings, label: currentBusinessTexts.savings },
     { path: '/business/financing', icon: BsPiggyBank, label: currentBusinessTexts.financing },

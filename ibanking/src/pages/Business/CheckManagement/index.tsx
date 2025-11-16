@@ -1,6 +1,5 @@
 // pages/Business/CheckManagement.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { CiSearch } from "react-icons/ci";
 import { TbCheck, TbCheckbox, TbChecklist } from "react-icons/tb";
 import { BusinessLayout } from '../../../components/BusinessLayout';
@@ -20,7 +19,6 @@ interface CheckManagementProps {
 }
 
 const CheckManagement: React.FC<CheckManagementProps> = ({ language }) => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'all'| 'cleared' >('all');
   const [searchTerm, setSearchTerm] = useState('');
 

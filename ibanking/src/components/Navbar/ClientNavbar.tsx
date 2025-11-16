@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { BsPiggyBank } from "react-icons/bs";
-import { useNavigate, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   CiLogout, 
   CiUser, 
   CiSettings,
   CiCreditCard1,
   CiBank,
-  CiMoneyBill,
   CiLock,
   CiBellOn,
-  CiHome
+  CiHome,
+  CiCalendar,
+  CiShare1
 } from "react-icons/ci";
 import { IoStatsChart, IoCardOutline } from "react-icons/io5";
 import { TbTransfer } from "react-icons/tb";
+import { FaWallet, FaMoneyCheckAlt, FaMobileAlt, FaFileInvoice } from "react-icons/fa";
+import { MdOutlinePayments } from "react-icons/md";
 import { navbarTexts } from '../../translations/navbarTexts';
 import { clientTexts } from '../../translations/clientNavbar';
 
@@ -38,27 +41,66 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
+    transferencias: false,
+    pagamentos: false,
+    outrosServicos: false
+  });
 
   const handleLogout = () => {
-    // Lógica de logout aqui
     navigate('/');
   };
 
   const currentTexts = navbarTexts[language];
-
   const currentClientTexts = clientTexts[language];
 
-  const menuItems = [
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (window.innerWidth < 1024) {
+      onToggle();
+    }
+  };
+
+  // Ações Rápidas (itens principais sem dropdown)
+  const quickActionsItems = [
     { path: '/mypanel', icon: CiHome, label: currentClientTexts.dashboard },
     { path: '/client/accounts', icon: CiBank, label: currentClientTexts.accounts },
-    { path: '/client/transfers', icon: TbTransfer, label: currentClientTexts.transfers },
-    { path: '/client/payments', icon: CiMoneyBill, label: currentClientTexts.payments },
     { path: '/client/cards', icon: CiCreditCard1, label: currentClientTexts.cards },
+    { path: '/client/recharges', icon: FaMobileAlt, label: currentClientTexts.recharges },
     { path: '/client/loans', icon: IoCardOutline, label: currentClientTexts.loans },
     { path: '/client/investments', icon: BsPiggyBank, label: currentClientTexts.investments },
     { path: '/client/insurance', icon: IoStatsChart, label: currentClientTexts.insurance },
   ];
 
+  // Menu Transferências (com dropdown) - ADICIONADO MOVIMENTOS
+  const transferItems = [
+    { path: '/client/transfers/national', icon: FaMoneyCheckAlt, label: currentClientTexts.nationalTransfers },
+    { path: '/client/transfers/multiple', icon: TbTransfer, label: currentClientTexts.multipleTransfers },
+    { path: '/client/transfers/digital-wallet', icon: FaWallet, label: currentClientTexts.digitalWallet },
+    { path: '/client/transfers/scheduled', icon: CiCalendar, label: currentClientTexts.scheduledOperations },
+    { path: '/client/movements', icon: FaFileInvoice, label: currentClientTexts.movements || 'Movimentos' },
+  ];
+
+  // Menu Pagamentos (apenas pagamentos de serviços)
+  const paymentItems = [
+    { path: '/client/payments/services', icon: MdOutlinePayments, label: currentClientTexts.servicePayments },
+    { path: '/client/recharges', icon: MdOutlinePayments, label: currentClientTexts.recharges },
+  ];
+
+  // Outros Serviços (com dropdown) - ADICIONADO PARTILHAR EXTRACTO
+  const otherServicesItems = [
+    { path: '/client/prepaid-cards', icon: MdOutlinePayments, label: currentClientTexts.prepaidCards },
+    { path: '/client/extract', icon: CiShare1, label: currentClientTexts.shareExtract || 'Partilhar Extracto' },
+  ];
+
+  // Menu de configurações
   const settingsItems = [
     { path: '/client/profile', icon: CiUser, label: currentClientTexts.profile },
     { path: '/client/security', icon: CiLock, label: currentClientTexts.security },
@@ -99,7 +141,7 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
           {/* Botão para fechar no mobile */}
           <button
             onClick={onToggle}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-red-50 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -127,7 +169,7 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
           
           <div className="flex space-x-2">
             <button
-              onClick={() => navigate('/client/profile')}
+              onClick={() => handleNavigation('/client/profile')}
               className="flex-1 bg-red-50 text-red-600 text-xs font-medium py-2 px-3 rounded-lg hover:bg-red-100 transition-colors"
             >
               {currentClientTexts.viewProfile}
@@ -145,34 +187,175 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
 
         {/* Menu de Navegação Principal */}
         <div className="flex-1 overflow-y-auto">
-          <nav className="p-4 space-y-1">
+          {/* Ações Rápidas */}
+          <nav className="p-4 border-b border-gray-100">
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               {currentClientTexts.quickAccess}
             </p>
             
-            {menuItems.map((item) => {
+            {quickActionsItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
               
               return (
-                <NavLink
+                <button
                   key={item.path}
-                  to={item.path}
-                  onClick={() => window.innerWidth < 1024 && onToggle()}
+                  onClick={() => handleNavigation(item.path)}
                   className={`
-                    flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200
+                    flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left
                     ${isActive 
-                      ? 'bg-red-50 text-red-600 border-r-2 border-red-600' 
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-red-600'
+                      ? 'bg-red-50 text-red-600' 
+                      : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
                     }
                   `}
                 >
                   <Icon size={20} />
                   <span>{item.label}</span>
-                </NavLink>
+                </button>
               );
             })}
           </nav>
+
+          {/* Transferências */}
+          <div className="border-t border-gray-100">
+            <button
+              onClick={() => toggleSection('transferencias')}
+              className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+            >
+              <div className="flex items-center space-x-3">
+                <TbTransfer size={20} />
+                <span>{currentClientTexts.transfers}</span>
+              </div>
+              <svg
+                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.transferencias ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {expandedSections.transferencias && (
+              <div className="pl-8 pr-3 pb-2 space-y-1">
+                {transferItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigation(item.path)}
+                      className={`
+                        flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
+                        ${isActive
+                          ? 'bg-red-50 text-red-600'
+                          : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
+                        }
+                      `}
+                    >
+                      <Icon size={16} />
+                      <span className="text-xs">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Pagamentos */}
+          <div className="border-t border-gray-100">
+            <button
+              onClick={() => toggleSection('pagamentos')}
+              className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+            >
+              <div className="flex items-center space-x-3">
+                <MdOutlinePayments size={20} />
+                <span>{currentClientTexts.payments}</span>
+              </div>
+              <svg
+                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.pagamentos ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {expandedSections.pagamentos && (
+              <div className="pl-8 pr-3 pb-2 space-y-1">
+                {paymentItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigation(item.path)}
+                      className={`
+                        flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
+                        ${isActive
+                          ? 'bg-red-50 text-red-600'
+                          : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
+                        }
+                      `}
+                    >
+                      <Icon size={16} />
+                      <span className="text-xs">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Outros Serviços */}
+          <div className="border-t border-gray-100">
+            <button
+              onClick={() => toggleSection('outrosServicos')}
+              className="flex items-center justify-between w-full px-3 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+            >
+              <div className="flex items-center space-x-3">
+                <CiSettings size={20} />
+                <span>{currentClientTexts.otherServices}</span>
+              </div>
+              <svg
+                className={`w-4 h-4 transition-transform duration-200 ${expandedSections.outrosServicos ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {expandedSections.outrosServicos && (
+              <div className="pl-8 pr-3 pb-2 space-y-1">
+                {otherServicesItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => handleNavigation(item.path)}
+                      className={`
+                        flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 text-left
+                        ${isActive
+                          ? 'bg-red-50 text-red-600'
+                          : 'text-gray-600 hover:bg-red-50 hover:text-red-600'
+                        }
+                      `}
+                    >
+                      <Icon size={16} />
+                      <span className="text-xs">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           {/* Menu de Configurações */}
           <nav className="p-4 border-t border-gray-100">
@@ -185,21 +368,20 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
               const isActive = location.pathname === item.path;
               
               return (
-                <NavLink
+                <button
                   key={item.path}
-                  to={item.path}
-                  onClick={() => window.innerWidth < 1024 && onToggle()}
+                  onClick={() => handleNavigation(item.path)}
                   className={`
-                    flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200
+                    flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left
                     ${isActive 
-                      ? 'bg-red-50 text-red-600 border-r-2 border-red-600' 
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-red-600'
+                      ? 'bg-red-50 text-red-600' 
+                      : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
                     }
                   `}
                 >
                   <Icon size={20} />
                   <span>{item.label}</span>
-                </NavLink>
+                </button>
               );
             })}
           </nav>

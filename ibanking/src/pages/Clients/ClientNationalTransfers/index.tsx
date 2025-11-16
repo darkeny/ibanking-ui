@@ -1,7 +1,7 @@
 // pages/BusinessNationalTransfers.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BusinessLayout } from '../../../components/BusinessLayout';
+import { ClientLayout } from '../../../components/ClientLayout';
 
 interface TransferData {
     fromAccount: string;
@@ -13,7 +13,7 @@ interface TransferData {
     scheduleDate: string;
 }
 
-const BusinessNationalTransfers: React.FC = () => {
+const ClientNationalTransfers: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [transferData, setTransferData] = useState<TransferData>({
@@ -221,7 +221,7 @@ const BusinessNationalTransfers: React.FC = () => {
     };
 
     return (
-        <BusinessLayout>
+        <ClientLayout>
            <div className="max-w-6xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -754,8 +754,8 @@ const BusinessNationalTransfers: React.FC = () => {
                 </div>
             </Modal>
 
-        </BusinessLayout>
+        </ClientLayout>
     );
 };
 
-export default BusinessNationalTransfers;
+export default ClientNationalTransfers;

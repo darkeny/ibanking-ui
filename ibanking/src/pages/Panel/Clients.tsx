@@ -48,9 +48,7 @@ const DashboardContent: React.FC = () => {
   ]);
 
   const [accounts] = useState([
-    { name: 'Conta Ordenado', number: 'PT50 1234 5678 9012 3456 7890', balance: 5420.15, type: 'current' },
-    { name: 'Conta Poupança', number: 'PT50 1234 5678 9012 3456 7891', balance: 12500.75, type: 'savings' },
-    { name: 'Conta Investimento', number: 'PT50 1234 5678 9012 3456 7892', balance: 8750.30, type: 'investment' },
+    { name: 'Conta Principal', number: 'PT50 1234 5678 9012 3456 7890', balance: 450920.15, type: 'current' },
   ]);
 
   const handleQuickAction = (path: string) => {
@@ -83,12 +81,12 @@ const DashboardContent: React.FC = () => {
         <div className="flex justify-between items-start">
           <div>
             <p className="text-red-100">Saldo Total Disponível</p>
-            <p className="text-3xl font-bold mt-2">MZN 26.671,20</p>
-            <p className="text-red-100 text-sm mt-1">Última atualização: hoje às 14:30</p>
+            <p className="text-3xl font-bold mt-2">MZN 450920,15</p>
+            <p className="text-red-100 text-sm mt-1">Última atualização: hoje às 08:30</p>
           </div>
           <div className="flex space-x-2">
             <button className="bg-white text-red-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-50 transition-colors">
-              Ver Extrato
+              Ver Movimentos
             </button>
             <button
               onClick={() => navigate('/client/transfers')}
@@ -162,7 +160,7 @@ const DashboardContent: React.FC = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Transações Recentes</h2>
           <button className="text-red-600 text-sm font-medium hover:text-red-700">
-            Ver extrato completo
+            Ver movimento completo
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
