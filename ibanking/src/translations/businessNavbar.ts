@@ -17,6 +17,8 @@ export const businessTexts = {
     scheduledOperations: 'Consultar operações agendadas',
     debtConversion: 'Conversão de dividas',
     digitalWallet: 'Carteira digital',
+    movements: "Movimentos",
+    shareExtract: "Partilhar Extracto",
 
     // Pagamentos
     payments: 'Pagamentos',
@@ -95,6 +97,8 @@ export const businessTexts = {
     scheduledOperations: 'Scheduled Operations',
     debtConversion: 'Debt Conversion',
     digitalWallet: 'Digital Wallet',
+    movements: "Movements", 
+    shareExtract: "Share Statement",
 
     // Pagamentos
     payments: 'Payments',
