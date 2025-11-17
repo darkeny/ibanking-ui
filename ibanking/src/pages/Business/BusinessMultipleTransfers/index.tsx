@@ -32,7 +32,7 @@ const BusinessMultipleTransfers: React.FC = () => {
         message: ''
     });
     const [, setEmailSent] = useState(false);
-    const [apiLink, setApiLink] = useState('');
+    const [apiLink] = useState('');
 
     const accounts = [
         { id: '1', name: 'Conta Principal Empresa', number: 'PT50 1234 5678 9012 3456 7890', balance: 25420.15 },
@@ -242,16 +242,7 @@ const BusinessMultipleTransfers: React.FC = () => {
         }, 2000);
     };
 
-    const generateQRCode = () => {
-        setShowQRModal(true);
-    };
 
-    const generateAPILink = () => {
-        const batchRef = generateBatchReference();
-        const link = `https://ibanking-ui.vercel.app/api/transfers/${batchRef}`;
-        setApiLink(link);
-        setShowAPIModal(true);
-    };
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text).then(() => {
