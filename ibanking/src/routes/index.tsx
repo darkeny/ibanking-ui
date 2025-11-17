@@ -6,7 +6,6 @@ import { SignIn } from '../pages/Signin';
 
 // Componentes do Cliente
 import { ClientDashboard } from '../pages/Clients/ClientsDashboard';
-import ClientTransfers from '../pages/Clients/ClientTransfers';
 import ClientRecharges from '../pages/Clients/ClientRecharges';
 import ClientServicePayments from '../pages/Clients/ClientServicePayments';
 import ClientMovements from '../pages/Clients/ClientMovements';
@@ -56,7 +55,6 @@ const AppRoutes: React.FC = () => {
                 <Route path="/client/accounts" element={<ClientGenericPage language="PT" />} />
 
                 {/* Transferências */}
-                <Route path="/client/transfers" element={<ClientTransfers />} />
                 <Route path="/client/transfers/national" element={<ClientNationalTransfers />} />
                 <Route path="/client/transfers/multiple" element={<ClientMultipleTransfers />} />
                 <Route path="/client/transfers/digital-wallet" element={<ClientDigitalWalletPayment language="PT" />} />

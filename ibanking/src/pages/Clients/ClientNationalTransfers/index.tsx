@@ -9,6 +9,7 @@ interface TransferData {
     toName: string;
     amount: string;
     description: string;
+    transferCategory: string;
     scheduled: boolean;
     scheduleDate: string;
 }
@@ -22,6 +23,7 @@ const ClientNationalTransfers: React.FC = () => {
         toName: '',
         amount: '',
         description: '',
+        transferCategory: '',
         scheduled: false,
         scheduleDate: ''
     });
@@ -39,6 +41,25 @@ const ClientNationalTransfers: React.FC = () => {
     const accounts = [
         { id: '1', name: 'Conta Principal Empresa', number: 'PT50 1234 5678 9012 3456 7890', balance: 25420.15 },
         { id: '2', name: 'Conta Operações', number: 'PT50 1234 5678 9012 3456 7891', balance: 125000.75 },
+    ];
+
+    // Categorias de transferência
+    const transferCategories = [
+        { value: 'salario', label: '💼 Pagamento de Salários' },
+        { value: 'fornecedor', label: '🏭 Pagamento a Fornecedores' },
+        { value: 'servicos', label: '🔧 Pagamento de Serviços' },
+        { value: 'impostos', label: '🏛️ Pagamento de Impostos' },
+        { value: 'investimento', label: '📈 Investimentos' },
+        { value: 'emprestimo', label: '💰 Pagamento de Empréstimos' },
+        { value: 'aluguel', label: '🏠 Pagamento de Aluguel' },
+        { value: 'utilidades', label: '⚡ Contas de Utilidades' },
+        { value: 'educacao', label: '🎓 Despesas de Educação' },
+        { value: 'saude', label: '🏥 Despesas de Saúde' },
+        { value: 'viagem', label: '✈️ Despesas de Viagem' },
+        { value: 'marketing', label: '📢 Despesas de Marketing' },
+        { value: 'manutencao', label: '🔧 Manutenção e Reparos' },
+        { value: 'equipamento', label: '💻 Compra de Equipamentos' },
+        { value: 'outros', label: '📦 Outras Transferências' }
     ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -62,6 +83,7 @@ const ClientNationalTransfers: React.FC = () => {
                transferData.toNIB && 
                transferData.toName && 
                transferData.amount && 
+               transferData.transferCategory &&
                parseFloat(transferData.amount) > 0;
     };
 
@@ -92,6 +114,7 @@ const ClientNationalTransfers: React.FC = () => {
             toName: '',
             amount: '',
             description: '',
+            transferCategory: '',
             scheduled: false,
             scheduleDate: ''
         });
@@ -105,6 +128,11 @@ const ClientNationalTransfers: React.FC = () => {
 
     const generateTransferReference = () => {
         return `TRF_NAC_${Date.now()}`;
+    };
+
+    const getCategoryLabel = (value: string) => {
+        const category = transferCategories.find(cat => cat.value === value);
+        return category ? category.label : 'Categoria não especificada';
     };
 
     const downloadPDFExtract = () => {
@@ -128,6 +156,9 @@ const ClientNationalTransfers: React.FC = () => {
             
             VALOR DA TRANSFERÊNCIA:
             MZN ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+            
+            CATEGORIA:
+            ${getCategoryLabel(transferData.transferCategory)}
             
             DESCRIÇÃO:
             ${transferData.description || 'Sem descrição'}
@@ -334,6 +365,29 @@ const ClientNationalTransfers: React.FC = () => {
                                             />
                                         </div>
 
+                                        {/* Categoria da Transferência */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Categoria da Transferência *
+                                            </label>
+                                            <select
+                                                name="transferCategory"
+                                                value={transferData.transferCategory}
+                                                onChange={handleInputChange}
+                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                            >
+                                                <option value="">Selecione a categoria</option>
+                                                {transferCategories.map(category => (
+                                                    <option key={category.value} value={category.value}>
+                                                        {category.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <p className="text-sm text-gray-500 mt-1">
+                                                Ajude-nos a entender como o seu valor está sendo usado
+                                            </p>
+                                        </div>
+
                                         {/* Descrição */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -426,6 +480,12 @@ const ClientNationalTransfers: React.FC = () => {
                                                 MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">Categoria:</span>
+                                            <span className="font-semibold">
+                                                {getCategoryLabel(transferData.transferCategory)}
+                                            </span>
+                                        </div>
                                         {transferData.description && (
                                             <div className="flex justify-between items-center">
                                                 <span className="text-gray-600">Descrição:</span>
@@ -488,6 +548,10 @@ const ClientNationalTransfers: React.FC = () => {
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">NIB Destino:</span>
                                             <span className="font-mono">{transferData.toNIB}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Categoria:</span>
+                                            <span>{getCategoryLabel(transferData.transferCategory)}</span>
                                         </div>
                                     </div>
 
@@ -605,6 +669,14 @@ const ClientNationalTransfers: React.FC = () => {
                                             MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
+                                    {transferData.transferCategory && (
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Categoria:</span>
+                                            <span className="font-semibold text-sm">
+                                                {getCategoryLabel(transferData.transferCategory)}
+                                            </span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Taxa:</span>
                                         <span className="font-semibold">MZN 50,00</span>

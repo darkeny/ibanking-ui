@@ -192,7 +192,7 @@ const BusinessMultipleTransfers: React.FC = () => {
     const downloadPDFExtract = () => {
         const batchRef = generateBatchReference();
         const totalAmount = getTotalAmount();
-        
+
         const pdfContent = `
             EXTRATO DE TRANSFERÊNCIAS MÚLTIPLAS
             ===================================
@@ -260,10 +260,10 @@ const BusinessMultipleTransfers: React.FC = () => {
     };
 
     // Componente Modal Reutilizável
-    const Modal = ({ isOpen, onClose, title, children }: { 
-        isOpen: boolean; 
-        onClose: () => void; 
-        title: string; 
+    const Modal = ({ isOpen, onClose, title, children }: {
+        isOpen: boolean;
+        onClose: () => void;
+        title: string;
         children: React.ReactNode;
     }) => {
         if (!isOpen) return null;
@@ -583,7 +583,7 @@ const BusinessMultipleTransfers: React.FC = () => {
                                     {/* Novas Opções de Extrato */}
                                     <div className="bg-white border border-gray-200 rounded-xl p-6">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Opções de Extrato</h3>
-                                        
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Download PDF */}
                                             <button
@@ -614,38 +614,6 @@ const BusinessMultipleTransfers: React.FC = () => {
                                                 <div>
                                                     <div className="font-semibold text-gray-900">Enviar por Email</div>
                                                     <div className="text-sm text-gray-600">Receber extrato no seu email</div>
-                                                </div>
-                                            </button>
-
-                                            {/* QR Code */}
-                                            <button
-                                                onClick={generateQRCode}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Gerar QR Code</div>
-                                                    <div className="text-sm text-gray-600">Código para partilha rápida</div>
-                                                </div>
-                                            </button>
-
-                                            {/* API Integration */}
-                                            <button
-                                                onClick={generateAPILink}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Integração API</div>
-                                                    <div className="text-sm text-gray-600">Partilhar dados via API</div>
                                                 </div>
                                             </button>
                                         </div>

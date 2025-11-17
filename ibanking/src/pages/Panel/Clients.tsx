@@ -13,7 +13,7 @@ const DashboardContent: React.FC = () => {
       description: 'Envie dinheiro agora',
       icon: '↗️',
       color: 'bg-blue-50 text-blue-600',
-      path: '/client/transfers'
+      path: '/client/transfers/national'
     },
     {
       title: 'Pagamentos',
@@ -89,7 +89,7 @@ const DashboardContent: React.FC = () => {
               Ver Movimentos
             </button>
             <button
-              onClick={() => navigate('/client/transfers')}
+              onClick={() => navigate('/client/transfers/national')}
               className="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-800 transition-colors"
             >
               Transferir

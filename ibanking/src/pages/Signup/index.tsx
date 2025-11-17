@@ -10,6 +10,7 @@ import {
     CiBank,
     CiCircleCheck,
     CiFileOn,
+    CiCreditCard1
 } from "react-icons/ci";
 import { IoCloudUpload } from "react-icons/io5";
 import { TbBuildingBank } from "react-icons/tb";
@@ -33,6 +34,7 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [accountType, setAccountType] = useState<'individual' | 'business'>('individual');
     const [accountNumber, setAccountNumber] = useState<string>('');
+    const [cardCustomization, setCardCustomization] = useState<'simple' | 'personalized'>('simple');
 
     // Estado do formulário
     const [formData, setFormData] = useState({
@@ -61,6 +63,9 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
         accountType: 'current',
         initialDeposit: '',
         currency: 'MZN',
+        
+        // Personalização do Cartão
+        cardName: '',
     });
 
     // Estado dos documentos
@@ -95,6 +100,18 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
             savingsAccount: 'Conta Poupança',
             individualDescription: 'Para uso pessoal e gestão financeira individual',
             businessDescription: 'Para empresas e profissionais independentes',
+
+            // Personalização do Cartão
+            cardCustomization: 'Personalização do Cartão',
+            simpleCard: 'Cartão Simples',
+            personalizedCard: 'Cartão Personalizado',
+            simpleCardDescription: 'Nome padrão no cartão (primeiro e último nome)',
+            personalizedCardDescription: 'Escolha o nome que aparece no seu cartão',
+            cardName: 'Nome no Cartão',
+            enterCardName: 'Digite o nome que deseja no cartão',
+            cardNamePlaceholder: 'Ex: Maria Silva, Dr. João, Empresa XYZ',
+            cardNameMaxLength: 'Máximo 20 caracteres',
+            cardNameRequired: 'Nome do cartão é obrigatório para personalização',
 
             // Informações pessoais
             personalInfo: 'Informações Pessoais',
@@ -200,6 +217,18 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
             savingsAccount: 'Savings Account',
             individualDescription: 'For personal use and individual financial management',
             businessDescription: 'For companies and independent professionals',
+
+            // Card Customization
+            cardCustomization: 'Card Customization',
+            simpleCard: 'Simple Card',
+            personalizedCard: 'Personalized Card',
+            simpleCardDescription: 'Standard name on card (first and last name)',
+            personalizedCardDescription: 'Choose the name that appears on your card',
+            cardName: 'Name on Card',
+            enterCardName: 'Enter the name you want on the card',
+            cardNamePlaceholder: 'Ex: Maria Silva, Dr. João, Company XYZ',
+            cardNameMaxLength: 'Maximum 20 characters',
+            cardNameRequired: 'Card name is required for personalization',
 
             // Personal information
             personalInfo: 'Personal Information',
@@ -396,6 +425,11 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
                     alert(t.minDeposit);
                     return false;
                 }
+                // Validar nome do cartão se for personalizado
+                if (cardCustomization === 'personalized' && !formData.cardName.trim()) {
+                    alert(t.cardNameRequired);
+                    return false;
+                }
                 return true;
 
             case 5:
@@ -444,13 +478,15 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
             const newAccountNumber = generateAccountNumber();
             setAccountNumber(newAccountNumber);
 
-            // Aqui você integraria com a API real do banco
-            console.log('Dados da conta:', {
-                // accountType,
-                // ...formData,
-                documents,
-                accountNumber: newAccountNumber
-            });
+            // // Aqui você integraria com a API real do banco
+            // console.log('Dados da conta:', {
+            //     accountType,
+            //     cardCustomization,
+            //     cardName: cardCustomization === 'personalized' ? formData.cardName : `${formData.firstName} ${formData.lastName}`,
+            //     ...formData,
+            //     documents,
+            //     accountNumber: newAccountNumber
+            // });
 
             setCurrentStep(6); // Tela de finalização
 
@@ -851,9 +887,76 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
 
                             {/* Passo 4: Informações da Conta */}
                             {currentStep === 4 && (
-                                <div className="space-y-6">
+                                <div className="space-y-8">
                                     <h2 className="text-xl font-semibold text-gray-900 mb-6">{t.accountInfo}</h2>
 
+                                    {/* Personalização do Cartão */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                            <CiCreditCard1 className="mr-2 text-red-600" size={24} />
+                                            {t.cardCustomization}
+                                        </h3>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <button
+                                                onClick={() => setCardCustomization('simple')}
+                                                className={`p-6 border-2 rounded-xl text-left transition-all ${cardCustomization === 'simple'
+                                                    ? 'border-red-500 bg-red-50 text-red-700'
+                                                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                                                    }`}
+                                            >
+                                                <CiCreditCard1 size={32} className="mb-3" />
+                                                <h4 className="font-semibold text-lg mb-2">{t.simpleCard}</h4>
+                                                <p className="text-sm text-gray-600">{t.simpleCardDescription}</p>
+                                                <div className="mt-3 text-sm font-medium">
+                                                    {language === 'PT' ? 'Nome padrão:' : 'Default name:'} {formData.firstName} {formData.lastName}
+                                                </div>
+                                            </button>
+
+                                            <button
+                                                onClick={() => setCardCustomization('personalized')}
+                                                className={`p-6 border-2 rounded-xl text-left transition-all ${cardCustomization === 'personalized'
+                                                    ? 'border-red-500 bg-red-50 text-red-700'
+                                                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                                                    }`}
+                                            >
+                                                <CiCreditCard1 size={32} className="mb-3" />
+                                                <h4 className="font-semibold text-lg mb-2">{t.personalizedCard}</h4>
+                                                <p className="text-sm text-gray-600">{t.personalizedCardDescription}</p>
+                                                <div className="mt-3 text-sm text-red-600 font-medium">
+                                                    {t.cardNameMaxLength}
+                                                </div>
+                                            </button>
+                                        </div>
+
+                                        {/* Campo para nome personalizado do cartão */}
+                                        {cardCustomization === 'personalized' && (
+                                            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                                <label className="block text-sm font-medium text-gray-700 mb-3">
+                                                    {t.cardName} *
+                                                </label>
+                                                <div className="relative">
+                                                    <CiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                                                    <input
+                                                        type="text"
+                                                        value={formData.cardName}
+                                                        onChange={(e) => handleInputChange('cardName', e.target.value)}
+                                                        placeholder={t.cardNamePlaceholder}
+                                                        maxLength={20}
+                                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                                <div className="flex justify-between mt-2">
+                                                    <p className="text-sm text-gray-500">{t.enterCardName}</p>
+                                                    <p className="text-sm text-gray-500">
+                                                        {formData.cardName.length}/20 {language === 'PT' ? 'caracteres' : 'characters'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Informações da Conta */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1035,5 +1138,4 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
         </>
     );
 };
-
 export default Signup;
