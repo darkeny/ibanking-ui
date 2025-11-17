@@ -32,6 +32,9 @@ import ClientNationalTransfers from '../pages/Clients/ClientNationalTransfers';
 import ClientMultipleTransfers from '../pages/Clients/ClientMultipleTransfers';
 import BusinessGenericPage from '../pages/Business/BusinessComingSoon';
 import BusinessServicePayments from '../pages/Business/BusinessServicePayments';
+import ClientDigitalWalletPayment from '../pages/Clients/ClientDigitalWalletPayment';
+import BusinessMovements from '../pages/Business/BusinessMovements';
+import BusinessExtract from '../pages/Business/BusinessExtract';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -56,7 +59,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/client/transfers" element={<ClientTransfers />} />
                 <Route path="/client/transfers/national" element={<ClientNationalTransfers />} />
                 <Route path="/client/transfers/multiple" element={<ClientMultipleTransfers />} />
-                <Route path="/client/transfers/digital-wallet" element={<ClientGenericPage language="PT" />} />
+                <Route path="/client/transfers/digital-wallet" element={<ClientDigitalWalletPayment language="PT" />} />
                 <Route path="/client/transfers/scheduled" element={<ClientGenericPage language="PT" />} />
 
                 {/* Pagamentos */}
@@ -81,9 +84,11 @@ const AppRoutes: React.FC = () => {
                 {/* Outros Serviços */}
                 <Route path="/client/prepaid-cards" element={<PrepaidCards language="PT" />} />
                 <Route path="/client/extract" element={<ClientExtract language="PT" />} />
+                <Route path="/business/extract" element={<BusinessExtract language="PT" />} />
 
                 {/* Movimentos e Extratos */}
                 <Route path="/client/movements" element={<ClientMovements language="PT" />} />
+                <Route path="/business/movements" element={<BusinessMovements language="PT" />} />
 
                 {/* Configurações */}
                 <Route path="/client/profile" element={<ClientGenericPage language="PT" />} />

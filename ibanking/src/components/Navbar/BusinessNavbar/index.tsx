@@ -12,7 +12,8 @@ import {
   CiCalendar,
   CiReceipt,
   CiCreditCard1,
-  CiHome
+  CiHome,
+  CiShare1
 } from "react-icons/ci";
 import {
   IoBusinessOutline,
@@ -20,7 +21,7 @@ import {
 } from "react-icons/io5";
 import { TbTransfer, TbCheck, TbCreditCard } from "react-icons/tb";
 import { MdOutlinePayments, MdOutlineSavings } from "react-icons/md";
-import { FaWallet, FaMoneyCheckAlt } from "react-icons/fa";
+import { FaWallet, FaMoneyCheckAlt, FaFileInvoice } from "react-icons/fa";
 import { businessTexts } from '../../../translations/businessNavbar';
 import { navbarTexts } from '../../../translations/navbarTexts';
 
@@ -124,6 +125,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/transfers/digital-wallet', icon: FaWallet, label: currentBusinessTexts.digitalWallet },
     { path: '/business/transfers/debt-conversion', icon: FaMoneyCheckAlt, label: currentBusinessTexts.debtConversion },
     { path: '/business/scheduled-transfers', icon: CiCalendar, label: currentBusinessTexts.scheduledOperations },
+    { path: '/business/movements', icon: FaFileInvoice, label: currentBusinessTexts.movements || 'Movimentos' },
   ];
 
   // Menu Pagamentos
@@ -147,6 +149,7 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/financing', icon: BsPiggyBank, label: currentBusinessTexts.financing },
     { path: '/business/notifications', icon: CiBellOn, label: currentBusinessTexts.notifications },
     { path: '/business/authorization', icon: CiLogout, label: currentBusinessTexts.transactionAuthorization },
+    { path: '/business/extract', icon: CiShare1, label: currentBusinessTexts.shareExtract || 'Partilhar Extracto' },
   ];
 
   // Menu de configurações
