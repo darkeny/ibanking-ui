@@ -79,9 +79,12 @@ const ClientNavbar: React.FC<ClientNavbarProps> = ({
     { path: '/client/insurance', icon: IoStatsChart, label: currentClientTexts.insurance },
   ];
 
-  // Menu Transferências (com dropdown) - ADICIONADO MOVIMENTOS
+  // Menu Transferências (com dropdown) - ATUALIZADO COM NOVOS LINKS
   const transferItems = [
     { path: '/client/transfers/national', icon: FaMoneyCheckAlt, label: currentClientTexts.nationalTransfers },
+    { path: '/client/transfers/international', icon: TbTransfer, label: language === 'PT' ? 'Internacionais' : 'International' },
+    { path: '/client/transfers/same-bank', icon: TbTransfer, label: language === 'PT' ? 'Entre contas do mesmo banco' : 'Same Bank Transfers' },
+    { path: '/client/transfers/my-accounts', icon: TbTransfer, label: language === 'PT' ? 'Entre as minhas contas' : 'Between My Accounts' },
     { path: '/client/transfers/multiple', icon: TbTransfer, label: currentClientTexts.multipleTransfers },
     { path: '/client/transfers/digital-wallet', icon: FaWallet, label: currentClientTexts.digitalWallet },
     { path: '/client/transfers/scheduled', icon: CiCalendar, label: currentClientTexts.scheduledOperations },

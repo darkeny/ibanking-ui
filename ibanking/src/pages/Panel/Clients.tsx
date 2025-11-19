@@ -55,6 +55,28 @@ const DashboardContent: React.FC = () => {
     navigate(path);
   };
 
+  const handleCardRequest = (cardType: string) => {
+    console.log(`Solicitando cartão: ${cardType}`);
+    // Aqui você pode adicionar a navegação para a página específica de solicitação
+    // ou mostrar um modal de solicitação
+    switch (cardType) {
+      case 'debit':
+        navigate('/client/cards/request-debit');
+        break;
+      case 'credit':
+        navigate('/client/cards/request-credit');
+        break;
+      case 'prepaid':
+        navigate('/client/cards/request-prepaid');
+        break;
+      case 'virtual':
+        navigate('/client/cards/request-virtual');
+        break;
+      default:
+        navigate('/client/cards');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header do Dashboard */}
@@ -189,7 +211,10 @@ const DashboardContent: React.FC = () => {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Meus Cartões</h2>
-          <button className="text-red-600 text-sm font-medium hover:text-red-700">
+          <button
+            onClick={() => navigate('/client/cards')}
+            className="text-red-600 text-sm font-medium hover:text-red-700"
+          >
             Gerir cartões
           </button>
         </div>
@@ -212,9 +237,9 @@ const DashboardContent: React.FC = () => {
             used={1245.30}
           />
 
-          {/* Novo Cartão */}
+          {/* Novo Cartão com opções */}
           <AddNewCard
-            onClick={() => console.log('Solicitar novo cartão')}
+            onClick={() => handleCardRequest('')}
           />
         </div>
       </div>
