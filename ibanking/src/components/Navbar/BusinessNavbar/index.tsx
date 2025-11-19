@@ -118,9 +118,12 @@ const BusinessNavbar: React.FC<BusinessNavbarProps> = ({
     { path: '/business/company/current-accounts', icon: CiBank, label: currentBusinessTexts.currentAccounts },
   ];
 
-  // Menu Transferências
+  // Menu Transferências - ATUALIZADO COM NOVOS LINKS
   const transferItems = [
     { path: '/business/transfers/national', icon: TbTransfer, label: currentBusinessTexts.nationalTransfers },
+    { path: '/business/transfers/international', icon: TbTransfer, label: language === 'PT' ? 'Internacionais' : 'International' },
+    { path: '/business/transfers/same-bank', icon: TbTransfer, label: language === 'PT' ? 'Entre contas do mesmo banco' : 'Same Bank Transfers' },
+    { path: '/business/transfers/my-accounts', icon: TbTransfer, label: language === 'PT' ? 'Entre as minhas contas' : 'Between My Accounts' },
     { path: '/business/transfers/multiple', icon: TbTransfer, label: currentBusinessTexts.multipleTransfers },
     { path: '/business/transfers/digital-wallet', icon: FaWallet, label: currentBusinessTexts.digitalWallet },
     { path: '/business/transfers/debt-conversion', icon: FaMoneyCheckAlt, label: currentBusinessTexts.debtConversion },

@@ -34,6 +34,7 @@ import BusinessServicePayments from '../pages/Business/BusinessServicePayments';
 import ClientDigitalWalletPayment from '../pages/Clients/ClientDigitalWalletPayment';
 import BusinessMovements from '../pages/Business/BusinessMovements';
 import BusinessExtract from '../pages/Business/BusinessExtract';
+import ClientCards from '../pages/Clients/ClientCards';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -56,6 +57,11 @@ const AppRoutes: React.FC = () => {
 
                 {/* Transferências */}
                 <Route path="/client/transfers/national" element={<ClientNationalTransfers />} />
+
+                <Route path="/client/transfers/international" element={<ClientGenericPage language={'PT'} />} />
+                <Route path="/client/transfers/same-bank" element={<ClientGenericPage language={'PT'}/>} />
+                <Route path="/client/transfers/my-accounts" element={<ClientGenericPage language={'PT'} />} />
+
                 <Route path="/client/transfers/multiple" element={<ClientMultipleTransfers />} />
                 <Route path="/client/transfers/digital-wallet" element={<ClientDigitalWalletPayment language="PT" />} />
                 <Route path="/client/transfers/scheduled" element={<ClientGenericPage language="PT" />} />
@@ -65,7 +71,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/client/payments/services" element={<ClientServicePayments language="PT" />} />
 
                 {/* Cartões */}
-                <Route path="/client/cards" element={<ClientGenericPage language="PT" />} />
+                <Route path="/client/cards" element={<ClientCards language="PT" />} />
 
                 {/* Recargas */}
                 <Route path="/client/recharges" element={<ClientRecharges language="PT" />} />
@@ -106,6 +112,11 @@ const AppRoutes: React.FC = () => {
 
                 {/* Transferências */}
                 <Route path="/business/transfers/national" element={<BusinessNationalTransfers />} />
+
+                <Route path="/business/transfers/international" element={<BusinessGenericPage language={'PT'} />} />
+                <Route path="/business/transfers/same-bank" element={<BusinessGenericPage language={'PT'}/>} />
+                <Route path="/business/transfers/my-accounts" element={<BusinessGenericPage language={'PT'} />} />
+                
                 <Route path="/business/transfers/multiple" element={<BusinessMultipleTransfers />} />
                 <Route path="/business/transfers/digital-wallet" element={<DigitalWalletPayment language="PT" />} />
                 <Route path="/business/transfers/debt-conversion" element={<BusinessGenericPage language="PT" />} />
