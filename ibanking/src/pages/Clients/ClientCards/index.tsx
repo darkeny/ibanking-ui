@@ -1,7 +1,7 @@
 // pages/ClientCards.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CiCreditCard1, CiCalendar, CiUser, CiLock } from "react-icons/ci";
+import { CiCreditCard1, CiCalendar, CiLock } from "react-icons/ci";
 import { ClientLayout } from '../../../components/ClientLayout';
 
 interface ClientCardsProps {
@@ -207,7 +207,7 @@ const ClientCards: React.FC<ClientCardsProps> = ({ language }) => {
         }
     }[language];
 
-    const [requestSubmitted, setRequestSubmitted] = useState(false);
+    const [] = useState(false);
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({
