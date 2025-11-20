@@ -35,6 +35,11 @@ import ClientDigitalWalletPayment from '../pages/Clients/ClientDigitalWalletPaym
 import BusinessMovements from '../pages/Business/BusinessMovements';
 import BusinessExtract from '../pages/Business/BusinessExtract';
 import ClientCards from '../pages/Clients/ClientCards';
+import ClientInvestments from '../pages/Clients/ClientInvestments';
+import BusinessInternationalTransfers from '../pages/Business/BusinessInternationalTransfers';
+import BusinessMyAccountsTransfers from '../pages/Business/BusinessMyAccountsTransfers';
+import ClientInternationalTransfers from '../pages/Clients/ClientInternationalTransfers';
+import ClientMyAccountsTransfers from '../pages/Clients/ClientMyAccountsTransfers';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -58,9 +63,7 @@ const AppRoutes: React.FC = () => {
                 {/* Transferências */}
                 <Route path="/client/transfers/national" element={<ClientNationalTransfers />} />
 
-                <Route path="/client/transfers/international" element={<ClientGenericPage language={'PT'} />} />
-                <Route path="/client/transfers/same-bank" element={<ClientGenericPage language={'PT'}/>} />
-                <Route path="/client/transfers/my-accounts" element={<ClientGenericPage language={'PT'} />} />
+                <Route path="/client/transfers/same-bank" element={<ClientGenericPage language={'PT'} />} />
 
                 <Route path="/client/transfers/multiple" element={<ClientMultipleTransfers />} />
                 <Route path="/client/transfers/digital-wallet" element={<ClientDigitalWalletPayment language="PT" />} />
@@ -80,7 +83,7 @@ const AppRoutes: React.FC = () => {
                 <Route path="/client/loans" element={<ClientGenericPage language="PT" />} />
 
                 {/* Investimentos */}
-                <Route path="/client/investments" element={<ClientGenericPage language="PT" />} />
+                <Route path="/client/investments" element={<ClientInvestments language={'PT'} />} />
 
                 {/* Seguros */}
                 <Route path="/client/insurance" element={<ClientGenericPage language="PT" />} />
@@ -113,10 +116,12 @@ const AppRoutes: React.FC = () => {
                 {/* Transferências */}
                 <Route path="/business/transfers/national" element={<BusinessNationalTransfers />} />
 
-                <Route path="/business/transfers/international" element={<BusinessGenericPage language={'PT'} />} />
-                <Route path="/business/transfers/same-bank" element={<BusinessGenericPage language={'PT'}/>} />
-                <Route path="/business/transfers/my-accounts" element={<BusinessGenericPage language={'PT'} />} />
-                
+                <Route path="/business/transfers/international" element={<BusinessInternationalTransfers />} />
+                <Route path="/client/transfers/international" element={<ClientInternationalTransfers />} />
+                <Route path="/business/transfers/same-bank" element={<BusinessGenericPage language={'PT'} />} />
+                <Route path="/business/transfers/my-accounts" element={<BusinessMyAccountsTransfers />} />
+                <Route path="/client/transfers/my-accounts" element={<ClientMyAccountsTransfers />} />
+
                 <Route path="/business/transfers/multiple" element={<BusinessMultipleTransfers />} />
                 <Route path="/business/transfers/digital-wallet" element={<DigitalWalletPayment language="PT" />} />
                 <Route path="/business/transfers/debt-conversion" element={<BusinessGenericPage language="PT" />} />

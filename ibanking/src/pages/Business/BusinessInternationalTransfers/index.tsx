@@ -1,65 +1,104 @@
-// pages/BusinessNationalTransfers.tsx
+// pages/BusinessInternationalTransfers.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BusinessLayout } from '../../../components/BusinessLayout';
 
 interface TransferData {
     fromAccount: string;
-    toNIB: string;
+    toIBAN: string;
     toName: string;
+    toAddress: string;
+    toCity: string;
+    toCountry: string;
+    toBankName: string;
+    toBankAddress: string;
+    toBankSwift: string;
     amount: string;
+    currency: string;
     description: string;
     transferCategory: string;
+    transferType: string;
     scheduled: boolean;
     scheduleDate: string;
+    feesCoveredBy: string;
 }
 
-const BusinessNationalTransfers: React.FC = () => {
+const BusinessInternationalTransfers: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [transferData, setTransferData] = useState<TransferData>({
         fromAccount: '',
-        toNIB: '',
+        toIBAN: '',
         toName: '',
+        toAddress: '',
+        toCity: '',
+        toCountry: '',
+        toBankName: '',
+        toBankAddress: '',
+        toBankSwift: '',
         amount: '',
+        currency: 'USD',
         description: '',
         transferCategory: '',
+        transferType: 'standard',
         scheduled: false,
-        scheduleDate: ''
+        scheduleDate: '',
+        feesCoveredBy: 'shared',
     });
     const [showEmailModal, setShowEmailModal] = useState(false);
-    const [showQRModal, setShowQRModal] = useState(false);
-    const [showAPIModal, setShowAPIModal] = useState(false);
     const [emailData, setEmailData] = useState({
         email: '',
-        subject: 'Comprovativo de Transferência Nacional',
+        subject: 'Comprovativo de Transferência Internacional',
         message: ''
     });
     const [, setEmailSent] = useState(false);
-    const [apiLink, setApiLink] = useState('');
 
     const accounts = [
-        { id: '1', name: 'Conta Principal Empresa', number: 'PT50 1234 5678 9012 3456 7890', balance: 25420.15 },
-        { id: '2', name: 'Conta Operações', number: 'PT50 1234 5678 9012 3456 7891', balance: 125000.75 },
+        { id: '1', name: 'Conta Principal Empresa USD', number: 'PT50 1234 5678 9012 3456 7890', balance: 125420.15, currency: 'USD' },
+        { id: '2', name: 'Conta Principal Empresa EUR', number: 'PT50 1234 5678 9012 3456 7891', balance: 89000.75, currency: 'EUR' },
+        { id: '3', name: 'Conta Operações USD', number: 'PT50 1234 5678 9012 3456 7892', balance: 250000.00, currency: 'USD' },
     ];
 
-    // Categorias de transferência
+    // Moedas disponíveis
+    const currencies = [
+        { code: 'USD', name: 'Dólar Americano', symbol: 'US$' },
+        { code: 'EUR', name: 'Euro', symbol: '€' },
+        { code: 'GBP', name: 'Libra Esterlina', symbol: '£' },
+        { code: 'ZAR', name: 'Rand Sul-Africano', symbol: 'R' },
+        { code: 'CNY', name: 'Yuan Chinês', symbol: '¥' },
+    ];
+
+    // Categorias de transferência internacional
     const transferCategories = [
-        { value: 'salario', label: '💼 Pagamento de Salários' },
-        { value: 'fornecedor', label: '🏭 Pagamento a Fornecedores' },
+        { value: 'importacao', label: '📦 Pagamento de Importação' },
+        { value: 'exportacao', label: '🚀 Recebimento de Exportação' },
+        { value: 'investimento', label: '📈 Investimento Internacional' },
+        { value: 'fornecedor', label: '🏭 Pagamento a Fornecedor Internacional' },
         { value: 'servicos', label: '🔧 Pagamento de Serviços' },
-        { value: 'impostos', label: '🏛️ Pagamento de Impostos' },
-        { value: 'investimento', label: '📈 Investimentos' },
-        { value: 'emprestimo', label: '💰 Pagamento de Empréstimos' },
-        { value: 'aluguel', label: '🏠 Pagamento de Aluguel' },
-        { value: 'utilidades', label: '⚡ Contas de Utilidades' },
-        { value: 'educacao', label: '🎓 Despesas de Educação' },
-        { value: 'saude', label: '🏥 Despesas de Saúde' },
-        { value: 'viagem', label: '✈️ Despesas de Viagem' },
-        { value: 'marketing', label: '📢 Despesas de Marketing' },
-        { value: 'manutencao', label: '🔧 Manutenção e Reparos' },
-        { value: 'equipamento', label: '💻 Compra de Equipamentos' },
+        { value: 'royalties', label: '💎 Pagamento de Royalties' },
+        { value: 'salario', label: '💼 Pagamento de Salários' },
+        { value: 'educacao', label: '🎓 Propinas/Educação' },
+        { value: 'familia', label: '👨‍👩‍👧‍👦 Suporte Familiar' },
         { value: 'outros', label: '📦 Outras Transferências' }
+    ];
+
+    // Tipos de transferência
+    const transferTypes = [
+        { value: 'standard', label: '🔄 Transferência Standard', description: '2-3 dias úteis', fee: 25 },
+        { value: 'express', label: '⚡ Transferência Expressa', description: '24 horas', fee: 50 },
+    ];
+
+    // Países disponíveis
+    const countries = [
+        { code: 'US', name: 'Estados Unidos' },
+        { code: 'GB', name: 'Reino Unido' },
+        { code: 'DE', name: 'Alemanha' },
+        { code: 'FR', name: 'França' },
+        { code: 'PT', name: 'Portugal' },
+        { code: 'ZA', name: 'África do Sul' },
+        { code: 'CN', name: 'China' },
+        { code: 'BR', name: 'Brasil' },
+        { code: 'MZ', name: 'Moçambique' },
     ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -80,15 +119,41 @@ const BusinessNationalTransfers: React.FC = () => {
 
     const validateStep1 = () => {
         return transferData.fromAccount && 
-               transferData.toNIB && 
+               transferData.toIBAN && 
                transferData.toName && 
+               transferData.toCountry &&
+               transferData.toBankName &&
+               transferData.toBankSwift &&
                transferData.amount && 
                transferData.transferCategory &&
+               transferData.transferType &&
                parseFloat(transferData.amount) > 0;
     };
 
     const getTotalAmount = () => {
         return parseFloat(transferData.amount || '0');
+    };
+
+    const getTransferFee = () => {
+        const transferType = transferTypes.find(type => type.value === transferData.transferType);
+        return transferType ? transferType.fee : 25;
+    };
+
+    const getExchangeRate = () => {
+        // Taxas de câmbio simuladas
+        const rates: { [key: string]: number } = {
+            'USD': 1,
+            'EUR': 0.92,
+            'GBP': 0.79,
+            'ZAR': 18.75,
+            'CNY': 7.23,
+        };
+        return rates[transferData.currency] || 1;
+    };
+
+    const getAmountInMZN = () => {
+        const exchangeRate = getExchangeRate();
+        return getTotalAmount() * exchangeRate;
     };
 
     const handleNext = () => {
@@ -110,24 +175,33 @@ const BusinessNationalTransfers: React.FC = () => {
         setStep(1);
         setTransferData({
             fromAccount: '',
-            toNIB: '',
+            toIBAN: '',
             toName: '',
+            toAddress: '',
+            toCity: '',
+            toCountry: '',
+            toBankName: '',
+            toBankAddress: '',
+            toBankSwift: '',
             amount: '',
+            currency: 'USD',
             description: '',
             transferCategory: '',
+            transferType: 'standard',
             scheduled: false,
-            scheduleDate: ''
+            scheduleDate: '',
+            feesCoveredBy: 'shared',
         });
         setEmailSent(false);
         setEmailData({
             email: '',
-            subject: 'Comprovativo de Transferência Nacional',
+            subject: 'Comprovativo de Transferência Internacional',
             message: ''
         });
     };
 
     const generateTransferReference = () => {
-        return `TRF_NAC_${Date.now()}`;
+        return `TRF_INT_${Date.now()}`;
     };
 
     const getCategoryLabel = (value: string) => {
@@ -135,13 +209,24 @@ const BusinessNationalTransfers: React.FC = () => {
         return category ? category.label : 'Categoria não especificada';
     };
 
+    const getTransferTypeLabel = (value: string) => {
+        const type = transferTypes.find(t => t.value === value);
+        return type ? type.label : 'Tipo não especificado';
+    };
+
+    const getCurrencySymbol = (currencyCode: string) => {
+        const currency = currencies.find(c => c.code === currencyCode);
+        return currency ? currency.symbol : '$';
+    };
+
     const downloadPDFExtract = () => {
         const transferRef = generateTransferReference();
         const totalAmount = getTotalAmount();
+        const amountInMZN = getAmountInMZN();
         
         const pdfContent = `
-            COMPROVATIVO DE TRANSFERÊNCIA NACIONAL
-            ======================================
+            COMPROVATIVO DE TRANSFERÊNCIA INTERNACIONAL
+            ===========================================
             
             Referência: ${transferRef}
             Data: ${new Date().toLocaleDateString('pt-PT')} ${new Date().toLocaleTimeString('pt-PT')}
@@ -152,13 +237,27 @@ const BusinessNationalTransfers: React.FC = () => {
             
             BENEFICIÁRIO:
             Nome: ${transferData.toName}
-            NIB: ${transferData.toNIB}
+            Endereço: ${transferData.toAddress}, ${transferData.toCity}, ${transferData.toCountry}
+            IBAN: ${transferData.toIBAN}
+            
+            BANCO DO BENEFICIÁRIO:
+            Nome: ${transferData.toBankName}
+            Endereço: ${transferData.toBankAddress}
+            SWIFT/BIC: ${transferData.toBankSwift}
             
             VALOR DA TRANSFERÊNCIA:
-            MZN ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+            ${getCurrencySymbol(transferData.currency)} ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })} ${transferData.currency}
+            (Aprox. MZN ${amountInMZN.toLocaleString('pt-PT', { minimumFractionDigits: 2 })})
+            
+            TAXA DE CÂMBIO: 1 ${transferData.currency} = ${getExchangeRate().toLocaleString('pt-PT', { minimumFractionDigits: 4 })} MZN
             
             CATEGORIA:
             ${getCategoryLabel(transferData.transferCategory)}
+            
+            TIPO DE TRANSFERÊNCIA:
+            ${getTransferTypeLabel(transferData.transferType)}
+            
+            TAXAS PAGAS POR: ${transferData.feesCoveredBy === 'sender' ? 'Remetente' : transferData.feesCoveredBy === 'receiver' ? 'Beneficiário' : 'Partilhadas'}
             
             DESCRIÇÃO:
             ${transferData.description || 'Sem descrição'}
@@ -168,7 +267,7 @@ const BusinessNationalTransfers: React.FC = () => {
             ${new Date(transferData.scheduleDate).toLocaleDateString('pt-PT')}
             ` : ''}
             
-            ======================================
+            ===========================================
             Your Bank Business - Luwali Technologies
         `;
 
@@ -176,7 +275,7 @@ const BusinessNationalTransfers: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `comprovativo_transferencia_${transferRef}.pdf`;
+        a.download = `comprovativo_transferencia_internacional_${transferRef}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -197,23 +296,6 @@ const BusinessNationalTransfers: React.FC = () => {
             setShowEmailModal(false);
             alert(`Comprovativo enviado com sucesso para: ${emailData.email}`);
         }, 2000);
-    };
-
-    const generateQRCode = () => {
-        setShowQRModal(true);
-    };
-
-    const generateAPILink = () => {
-        const transferRef = generateTransferReference();
-        const link = `https://ibanking-ui.vercel.app/api/transfers/national/${transferRef}`;
-        setApiLink(link);
-        setShowAPIModal(true);
-    };
-
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('Link copiado para a área de transferência!');
-        });
     };
 
     // Componente Modal Reutilizável
@@ -258,8 +340,8 @@ const BusinessNationalTransfers: React.FC = () => {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Transferência Nacional</h1>
-                            <p className="text-gray-600 mt-1">Execute transferências para outras contas nacionais</p>
+                            <h1 className="text-2xl font-bold text-gray-900">Transferência Internacional</h1>
+                            <p className="text-gray-600 mt-1">Execute transferências para contas no exterior</p>
                         </div>
                         <button
                             onClick={() => navigate('/panel')}
@@ -295,7 +377,7 @@ const BusinessNationalTransfers: React.FC = () => {
                             {/* Step 1: Dados da Transferência */}
                             {step === 1 && (
                                 <div className="space-y-6">
-                                    <h2 className="text-lg font-semibold text-gray-900">Dados da Transferência</h2>
+                                    <h2 className="text-lg font-semibold text-gray-900">Dados da Transferência Internacional</h2>
 
                                     <div className="space-y-4">
                                         {/* Conta de Origem */}
@@ -312,93 +394,244 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 <option value="">Selecione a conta</option>
                                                 {accounts.map(account => (
                                                     <option key={account.id} value={account.id}>
-                                                        {account.name} - MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                        {account.name} - {account.currency} {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                                     </option>
                                                 ))}
                                             </select>
                                         </div>
 
                                         {/* Dados do Beneficiário */}
+                                        <div className="bg-blue-50 rounded-xl p-4 mb-4">
+                                            <h3 className="font-semibold text-blue-900 mb-3">Dados do Beneficiário</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        IBAN do Beneficiário *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toIBAN"
+                                                        value={transferData.toIBAN}
+                                                        onChange={handleInputChange}
+                                                        placeholder="PT50 0000 0000 0000 0000 0000 0"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Nome do Beneficiário *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toName"
+                                                        value={transferData.toName}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Nome completo do beneficiário"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Endereço
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toAddress"
+                                                        value={transferData.toAddress}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Endereço"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Cidade
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toCity"
+                                                        value={transferData.toCity}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Cidade"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        País *
+                                                    </label>
+                                                    <select
+                                                        name="toCountry"
+                                                        value={transferData.toCountry}
+                                                        onChange={handleInputChange}
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    >
+                                                        <option value="">Selecione o país</option>
+                                                        {countries.map(country => (
+                                                            <option key={country.code} value={country.code}>
+                                                                {country.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Dados do Banco do Beneficiário */}
+                                        <div className="bg-green-50 rounded-xl p-4 mb-4">
+                                            <h3 className="font-semibold text-green-900 mb-3">Dados do Banco do Beneficiário</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Nome do Banco *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toBankName"
+                                                        value={transferData.toBankName}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Nome do banco"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Código SWIFT/BIC *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="toBankSwift"
+                                                        value={transferData.toBankSwift}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Código SWIFT/BIC"
+                                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="mt-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Endereço do Banco
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="toBankAddress"
+                                                    value={transferData.toBankAddress}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Endereço completo do banco"
+                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Valor e Moeda */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    NIB do Beneficiário *
+                                                    Valor *
                                                 </label>
                                                 <input
-                                                    type="text"
-                                                    name="toNIB"
-                                                    value={transferData.toNIB}
+                                                    type="number"
+                                                    name="amount"
+                                                    value={transferData.amount}
                                                     onChange={handleInputChange}
-                                                    placeholder="PT50 XXXX XXXX XXXX XXXX XXXX"
+                                                    placeholder="0,00"
+                                                    step="0.01"
+                                                    min="0.01"
                                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                 />
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Nome do Beneficiário *
+                                                    Moeda *
                                                 </label>
-                                                <input
-                                                    type="text"
-                                                    name="toName"
-                                                    value={transferData.toName}
+                                                <select
+                                                    name="currency"
+                                                    value={transferData.currency}
                                                     onChange={handleInputChange}
-                                                    placeholder="Nome completo do beneficiário"
                                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                                />
+                                                >
+                                                    {currencies.map(currency => (
+                                                        <option key={currency.code} value={currency.code}>
+                                                            {currency.code} - {currency.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
 
-                                        {/* Valor */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Valor (MZN) *
-                                            </label>
-                                            <input
-                                                type="number"
-                                                name="amount"
-                                                value={transferData.amount}
-                                                onChange={handleInputChange}
-                                                placeholder="0,00"
-                                                step="0.01"
-                                                min="0.01"
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                            />
+                                        {/* Categoria e Tipo de Transferência */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Categoria da Transferência *
+                                                </label>
+                                                <select
+                                                    name="transferCategory"
+                                                    value={transferData.transferCategory}
+                                                    onChange={handleInputChange}
+                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                >
+                                                    <option value="">Selecione a categoria</option>
+                                                    {transferCategories.map(category => (
+                                                        <option key={category.value} value={category.value}>
+                                                            {category.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Tipo de Transferência *
+                                                </label>
+                                                <select
+                                                    name="transferType"
+                                                    value={transferData.transferType}
+                                                    onChange={handleInputChange}
+                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                >
+                                                    {transferTypes.map(type => (
+                                                        <option key={type.value} value={type.value}>
+                                                            {type.label} - {type.description}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        {/* Categoria da Transferência */}
+                                        {/* Quem paga as taxas */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Categoria da Transferência *
+                                                Taxas de Transferência Pagas por
                                             </label>
                                             <select
-                                                name="transferCategory"
-                                                value={transferData.transferCategory}
+                                                name="feesCoveredBy"
+                                                value={transferData.feesCoveredBy}
                                                 onChange={handleInputChange}
                                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                             >
-                                                <option value="">Selecione a categoria</option>
-                                                {transferCategories.map(category => (
-                                                    <option key={category.value} value={category.value}>
-                                                        {category.label}
-                                                    </option>
-                                                ))}
+                                                <option value="shared">Partilhadas (OUR)</option>
+                                                <option value="sender">Remetente (BEN)</option>
+                                                <option value="receiver">Beneficiário (SHA)</option>
                                             </select>
                                             <p className="text-sm text-gray-500 mt-1">
-                                                Ajude-nos a entender como o seu valor está sendo usado
+                                                OUR: Taxas partilhadas | BEN: Beneficiário paga todas | SHA: Remetente paga todas
                                             </p>
                                         </div>
 
                                         {/* Descrição */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Descrição (Opcional)
+                                                Descrição da Transferência
                                             </label>
-                                            <input
-                                                type="text"
+                                            <textarea
                                                 name="description"
                                                 value={transferData.description}
                                                 onChange={handleInputChange}
-                                                placeholder="Descrição da transferência"
+                                                placeholder="Descrição detalhada da transferência internacional"
+                                                rows={3}
                                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                             />
                                         </div>
@@ -457,7 +690,7 @@ const BusinessNationalTransfers: React.FC = () => {
                             {/* Step 2: Confirmação */}
                             {step === 2 && (
                                 <div className="space-y-6">
-                                    <h2 className="text-lg font-semibold text-gray-900">Confirmar Transferência</h2>
+                                    <h2 className="text-lg font-semibold text-gray-900">Confirmar Transferência Internacional</h2>
 
                                     <div className="bg-gray-50 rounded-xl p-6 space-y-4">
                                         <div className="flex justify-between items-center">
@@ -471,33 +704,51 @@ const BusinessNationalTransfers: React.FC = () => {
                                             <span className="font-semibold">{transferData.toName}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-gray-600">NIB:</span>
-                                            <span className="font-semibold font-mono">{transferData.toNIB}</span>
+                                            <span className="text-gray-600">IBAN:</span>
+                                            <span className="font-semibold font-mono">{transferData.toIBAN}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">Banco Destino:</span>
+                                            <span className="font-semibold">{transferData.toBankName}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">SWIFT:</span>
+                                            <span className="font-semibold font-mono">{transferData.toBankSwift}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Valor:</span>
                                             <span className="font-semibold text-red-600 text-lg">
-                                                MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                {getCurrencySymbol(transferData.currency)} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })} {transferData.currency}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-gray-600">Categoria:</span>
+                                            <span className="text-gray-600">Aprox. em MZN:</span>
                                             <span className="font-semibold">
-                                                {getCategoryLabel(transferData.transferCategory)}
+                                                MZN {getAmountInMZN().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">Taxa de Câmbio:</span>
+                                            <span className="font-semibold">
+                                                1 {transferData.currency} = {getExchangeRate().toLocaleString('pt-PT', { minimumFractionDigits: 4 })} MZN
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">Taxa de Transferência:</span>
+                                            <span className="font-semibold">
+                                                {getCurrencySymbol(transferData.currency)} {getTransferFee().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600">Tipo:</span>
+                                            <span className="font-semibold">
+                                                {getTransferTypeLabel(transferData.transferType)}
                                             </span>
                                         </div>
                                         {transferData.description && (
                                             <div className="flex justify-between items-center">
                                                 <span className="text-gray-600">Descrição:</span>
                                                 <span className="font-semibold">{transferData.description}</span>
-                                            </div>
-                                        )}
-                                        {transferData.scheduled && (
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-gray-600">Data programada:</span>
-                                                <span className="font-semibold">
-                                                    {new Date(transferData.scheduleDate).toLocaleDateString('pt-PT')}
-                                                </span>
                                             </div>
                                         )}
                                     </div>
@@ -529,10 +780,10 @@ const BusinessNationalTransfers: React.FC = () => {
                                     </div>
 
                                     <div>
-                                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Transferência Processada!</h2>
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Transferência Internacional Processada!</h2>
                                         <p className="text-gray-600">
                                             A transferência para <strong>{transferData.toName}</strong> no valor de{' '}
-                                            <strong>MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</strong> foi processada com sucesso.
+                                            <strong>{getCurrencySymbol(transferData.currency)} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })} {transferData.currency}</strong> foi processada com sucesso.
                                         </p>
                                     </div>
 
@@ -546,16 +797,16 @@ const BusinessNationalTransfers: React.FC = () => {
                                             <span>{new Date().toLocaleDateString('pt-PT')} {new Date().toLocaleTimeString('pt-PT')}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">NIB Destino:</span>
-                                            <span className="font-mono">{transferData.toNIB}</span>
+                                            <span className="text-gray-600">IBAN Destino:</span>
+                                            <span className="font-mono">{transferData.toIBAN}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Categoria:</span>
-                                            <span>{getCategoryLabel(transferData.transferCategory)}</span>
+                                            <span className="text-gray-600">SWIFT:</span>
+                                            <span className="font-mono">{transferData.toBankSwift}</span>
                                         </div>
                                     </div>
 
-                                    {/* Opções de Comprovativo */}
+                                    {/* Opções de Comprovativo Simplificadas */}
                                     <div className="bg-white border border-gray-200 rounded-xl p-6">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Opções de Comprovativo</h3>
                                         
@@ -571,7 +822,7 @@ const BusinessNationalTransfers: React.FC = () => {
                                                     </svg>
                                                 </div>
                                                 <div>
-                                                    <div className="font-semibold text-gray-900">Download PDF</div>
+                                                    <div className="font-semibold text-gray-900">Visualizar PDF</div>
                                                     <div className="text-sm text-gray-600">Baixar comprovativo em PDF</div>
                                                 </div>
                                             </button>
@@ -589,38 +840,6 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 <div>
                                                     <div className="font-semibold text-gray-900">Enviar por Email</div>
                                                     <div className="text-sm text-gray-600">Receber comprovativo por email</div>
-                                                </div>
-                                            </button>
-
-                                            {/* QR Code */}
-                                            <button
-                                                onClick={generateQRCode}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Gerar QR Code</div>
-                                                    <div className="text-sm text-gray-600">Código para partilha rápida</div>
-                                                </div>
-                                            </button>
-
-                                            {/* API Integration */}
-                                            <button
-                                                onClick={generateAPILink}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Integração API</div>
-                                                    <div className="text-sm text-gray-600">Partilhar dados via API</div>
                                                 </div>
                                             </button>
                                         </div>
@@ -649,12 +868,12 @@ const BusinessNationalTransfers: React.FC = () => {
                     <div className="lg:col-span-1">
                         {/* Informações Úteis */}
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações Internacionais</h3>
                             <div className="space-y-3 text-sm text-gray-600">
-                                <p>• Transferências processadas em tempo real</p>
-                                <p>• Horário de processamento: 24/7</p>
-                                <p>• Limite máximo por transferência: MZN 500.000,00</p>
-                                <p>• Taxas aplicáveis conforme tabela</p>
+                                <p>• Processamento: 1-3 dias úteis</p>
+                                <p>• Horário de corte: 14:00 (GMT)</p>
+                                <p>• Limite máximo: $100,000 USD</p>
+                                <p>• Taxas variam por moeda e destino</p>
                             </div>
                         </div>
 
@@ -666,26 +885,26 @@ const BusinessNationalTransfers: React.FC = () => {
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Valor:</span>
                                         <span className="font-semibold">
-                                            MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                            {getCurrencySymbol(transferData.currency)} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
-                                    {transferData.transferCategory && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Categoria:</span>
-                                            <span className="font-semibold text-sm">
-                                                {getCategoryLabel(transferData.transferCategory)}
-                                            </span>
-                                        </div>
-                                    )}
+                                    <div className="flex justify-between">
+                                        <span className="text-gray-600">Aprox. MZN:</span>
+                                        <span className="font-semibold">
+                                            MZN {getAmountInMZN().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                        </span>
+                                    </div>
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Taxa:</span>
-                                        <span className="font-semibold">MZN 50,00</span>
+                                        <span className="font-semibold">
+                                            {getCurrencySymbol(transferData.currency)} {getTransferFee().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                        </span>
                                     </div>
                                     <div className="border-t pt-3">
                                         <div className="flex justify-between text-lg">
                                             <span className="font-semibold">Total:</span>
                                             <span className="font-bold text-red-600">
-                                                MZN {(getTotalAmount() + 50).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                {getCurrencySymbol(transferData.currency)} {(getTotalAmount() + getTransferFee()).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
                                     </div>
@@ -757,77 +976,8 @@ const BusinessNationalTransfers: React.FC = () => {
                     </div>
                 </div>
             </Modal>
-
-            {/* Modal de QR Code */}
-            <Modal isOpen={showQRModal} onClose={() => setShowQRModal(false)} title="QR Code de Partilha">
-                <div className="space-y-4 text-center">
-                    <div className="bg-gray-100 rounded-xl p-8 flex items-center justify-center">
-                        <div className="text-center">
-                            <div className="w-48 h-48 bg-white border-4 border-gray-300 mx-auto mb-4 flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="text-6xl mb-2">📱</div>
-                                    <div className="text-xs text-gray-500">QR Code</div>
-                                </div>
-                            </div>
-                            <p className="text-sm text-gray-600">
-                                Aponte a câmara para ler o código
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-blue-50 rounded-lg p-3">
-                        <p className="text-blue-700 text-sm">
-                            <strong>Link:</strong> https://ibanking-ui.vercel.app/
-                        </p>
-                    </div>
-
-                    <button
-                        onClick={() => copyToClipboard('https://ibanking-ui.vercel.app/')}
-                        className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-                    >
-                        Copiar Link
-                    </button>
-                </div>
-            </Modal>
-
-            {/* Modal de API */}
-            <Modal isOpen={showAPIModal} onClose={() => setShowAPIModal(false)} title="Integração API">
-                <div className="space-y-4">
-                    <div className="bg-purple-50 rounded-lg p-4">
-                        <h4 className="font-semibold text-purple-900 mb-2">Link da API</h4>
-                        <p className="text-purple-700 text-sm break-all bg-white p-2 rounded border">
-                            {apiLink}
-                        </p>
-                    </div>
-
-                    <div className="bg-yellow-50 rounded-lg p-3">
-                        <h4 className="font-semibold text-yellow-900 text-sm mb-1">Como usar:</h4>
-                        <ul className="text-yellow-700 text-xs space-y-1">
-                            <li>• Use este link para integração com sistemas externos</li>
-                            <li>• O link contém todos os dados da transferência</li>
-                            <li>• Compatível com REST API</li>
-                        </ul>
-                    </div>
-
-                    <div className="flex space-x-3">
-                        <button
-                            onClick={() => setShowAPIModal(false)}
-                            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-                        >
-                            Fechar
-                        </button>
-                        <button
-                            onClick={() => copyToClipboard(apiLink)}
-                            className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-                        >
-                            Copiar Link
-                        </button>
-                    </div>
-                </div>
-            </Modal>
-
         </BusinessLayout>
     );
 };
 
-export default BusinessNationalTransfers;
+export default BusinessInternationalTransfers;
