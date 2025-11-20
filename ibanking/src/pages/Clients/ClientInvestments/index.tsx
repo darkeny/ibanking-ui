@@ -1,5 +1,5 @@
 // pages/ClientInvestments.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ClientLayout } from '../../../components/ClientLayout';
 
 interface ClientInvestmentsProps {
@@ -219,8 +219,6 @@ const ClientInvestments: React.FC<ClientInvestmentsProps> = ({ language }) => {
 
   // Calcular totais da carteira
   const portfolioTotal = portfolio.reduce((sum, item) => sum + item.currentValue, 0);
-  const totalInvested = portfolio.reduce((sum, item) => sum + item.totalInvested, 0);
-  const totalProfitLoss = portfolioTotal - totalInvested;
   const todayProfitLoss = portfolio.reduce((sum, item) => {
     const stock = marketStocks.find(s => s.id === item.stock.id);
     return stock ? sum + (stock.change * item.quantity) : sum;
