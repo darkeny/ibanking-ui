@@ -561,7 +561,7 @@ const Signup: React.FC<SignupProps> = ({ language }) => {
 
     return (
         <>
-            <Navbar language={language} toggleLanguage={function (): void {
+            <Navbar language={language} setLanguage={function (): void {
                 throw new Error('Function not implemented.');
             } }  />
             <div className="min-h-screen bg-linear-to-br from-white to-gray-50 flex items-center justify-center py-8 px-4">

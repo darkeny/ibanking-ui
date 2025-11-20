@@ -10,12 +10,9 @@ export function SignIn() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [language, setLanguage] = useState<'PT' | 'EN'>('PT');
+    const [language] = useState<'PT' | 'EN'>('PT');
     const [userType, setUserType] = useState<'individual' | 'business'>('individual');
 
-    const toggleLanguage = () => {
-        setLanguage(prev => prev === 'PT' ? 'EN' : 'PT');
-    };
 
     const currentTexts = texts[language];
 
@@ -35,7 +32,9 @@ export function SignIn() {
 
     return (
         <>
-            <Navbar language={language} toggleLanguage={toggleLanguage} />
+            <Navbar language={language} setLanguage={function (): void {
+                throw new Error('Function not implemented.');
+            } } />
             <div className="bg-linear-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden min-h-screen flex items-center justify-center">
                 {/* Background com gradiente animado */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/30 to-red-900/20 animate-gradient-x"></div>
