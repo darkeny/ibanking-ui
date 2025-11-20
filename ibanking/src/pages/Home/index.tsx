@@ -6,19 +6,20 @@ import { BankValues } from "../../components/BankValues";
 import { BranchLocator } from "../../components/BranchLocator";
 
 export function Home() {
-  const [language, setLanguage] = useState<'PT' | 'EN'>('PT');
+  const [language, setLanguage] = useState<'PT' | 'EN' | 'ES' | 'FR' | 'DE' | 'IT' | 'NL'>('PT');
 
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'PT' ? 'EN' : 'PT');
+  // Converte para apenas PT ou EN para componentes antigos
+  const getCompatibleLanguage = (lang: string): 'PT' | 'EN' => {
+    return lang === 'PT' ? 'PT' : 'EN';
   };
 
   return (
     <>
-      <Navbar language={language} toggleLanguage={toggleLanguage} />
-      <HeroCarousel language={language} />
-      <BranchLocator language={"PT"} />
-      <BankValues language={language} />
-      <Footer language={language} />
+      <Navbar language={language} setLanguage={setLanguage} />
+      <HeroCarousel language={getCompatibleLanguage(language)} />
+      <BranchLocator language={getCompatibleLanguage(language)} />
+      <BankValues language={getCompatibleLanguage(language)} />
+      <Footer language={getCompatibleLanguage(language)} />
     </>
   );
 }

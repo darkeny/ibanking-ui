@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { IoBusinessOutline } from "react-icons/io5";
 import { CiLogin, CiUser } from "react-icons/ci";
@@ -7,40 +7,109 @@ import { navbarTexts } from '../../translations/navbarTexts';
 
 // Interface para as props
 interface NavbarProps {
-    language: 'PT' | 'EN';
-    toggleLanguage: () => void;
+    language: 'PT' | 'EN' | 'ES' | 'FR' | 'DE' | 'IT' | 'NL';
+    setLanguage: (language: 'PT' | 'EN' | 'ES' | 'FR' | 'DE' | 'IT' | 'NL') => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
+const Navbar: React.FC<NavbarProps> = ({ language, setLanguage }) => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
+    const languageDropdownRef = useRef<HTMLDivElement>(null);
 
     const handleRedirect = () => navigate('/signin');
     const toggleMenu = () => setMenuOpen(!menuOpen);
-
+    const toggleLanguageDropdown = () => setLanguageDropdownOpen(!languageDropdownOpen);
 
     const currentTexts = navbarTexts[language];
+
+    const languages = [
+        { code: 'PT' as const, name: 'Português', flag: '🇵🇹' },
+        { code: 'EN' as const, name: 'English', flag: '🇺🇸' },
+        { code: 'ES' as const, name: 'Español', flag: '🇪🇸' },
+        { code: 'FR' as const, name: 'Français', flag: '🇫🇷' },
+        { code: 'DE' as const, name: 'Deutsch', flag: '🇩🇪' },
+        { code: 'IT' as const, name: 'Italiano', flag: '🇮🇹' },
+        { code: 'NL' as const, name: 'Nederlands', flag: '🇳🇱' }
+    ];
+
+    const handleLanguageSelect = (langCode: 'PT' | 'EN' | 'ES' | 'FR' | 'DE' | 'IT' | 'NL') => {
+        setLanguage(langCode);
+        setLanguageDropdownOpen(false);
+    };
+
+    // Fechar dropdown quando clicar fora
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+                setLanguageDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <>
             <nav className="bg-white border-b-4 border-red-400 shadow-lg">
                 <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                    {/* Top Bar - Agora usa a toggleLanguage da prop */}
+                    {/* Top Bar */}
                     <div className="flex justify-end items-center h-8 bg-gray-100 px-4 rounded-b-2xl">
                         <div className="flex items-center space-x-4 text-xs">
-                            <button
-                                onClick={toggleLanguage} // ← Agora usa a função do pai
-                                className="flex items-center gap-1 text-gray-600 hover:text-red-400 transition-colors duration-300"
-                            >
-                                <IoLanguage size={14} />
-                                <span className="font-medium">{language}</span>
-                            </button>
+                            {/* Language Dropdown */}
+                            <div className="relative" ref={languageDropdownRef}>
+                                <button
+                                    onClick={toggleLanguageDropdown}
+                                    className="flex items-center gap-1 text-gray-600 hover:text-red-400 transition-colors duration-300"
+                                >
+                                    <IoLanguage size={14} />
+                                    <span className="font-medium">{currentTexts.language}</span>
+                                    <svg 
+                                        className={`w-3 h-3 ml-1 transition-transform duration-200 ${languageDropdownOpen ? 'rotate-180' : ''}`} 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                {/* Language Dropdown Menu */}
+                                {languageDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-2xl border border-gray-200 rounded-lg z-50">
+                                        <div className="py-2">
+                                            {languages.map((lang) => (
+                                                <button
+                                                    key={lang.code}
+                                                    onClick={() => handleLanguageSelect(lang.code)}
+                                                    className={`flex items-center gap-3 w-full px-4 py-2 text-sm text-left transition-colors duration-200 ${
+                                                        language === lang.code 
+                                                            ? 'bg-red-50 text-red-400' 
+                                                            : 'text-gray-700 hover:bg-red-50 hover:text-red-400'
+                                                    }`}
+                                                >
+                                                    <span className="text-base">{lang.flag}</span>
+                                                    <span>{lang.name}</span>
+                                                    {language === lang.code && (
+                                                        <svg className="w-4 h-4 ml-auto text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
                             <NavLink to="/mypanel" className="text-gray-600 hover:text-red-400 transition-colors duration-300">
                                 {currentTexts.login}
                             </NavLink>
                         </div>
                     </div>
-
 
                     {/* Main Navigation */}
                     <div className="relative flex h-20 items-center justify-between">
@@ -59,7 +128,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                         {/* Main navigation for larger screens */}
                         <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center">
                             <div className="flex space-x-1 flex-nowrap whitespace-nowrap">
-                                {/* Particulares Dropdown */}
+                                {/* Personal Dropdown */}
                                 <div className="relative group">
                                     <button className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                         <CiUser size={18} />
@@ -92,7 +161,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                                     </div>
                                 </div>
 
-                                {/* Empresas Dropdown */}
+                                {/* Business Dropdown */}
                                 <div className="relative group">
                                     <button className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                         <IoBusinessOutline size={18} />
@@ -122,7 +191,7 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                                     </div>
                                 </div>
 
-                                {/* Links diretos */}
+                                {/* Direct links */}
                                 <NavLink to="#" className="flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors duration-300">
                                     {currentTexts.private}
                                 </NavLink>
@@ -180,6 +249,30 @@ const Navbar: React.FC<NavbarProps> = ({ language, toggleLanguage }) => {
                 {menuOpen && (
                     <div className="lg:hidden border-t border-red-200 bg-white" id="mobile-menu">
                         <div className="px-2 pb-3 pt-2 space-y-1">
+                            {/* Language Selection in Mobile Menu */}
+                            <div className="px-3 py-2 border-b">
+                                <div className="text-sm font-semibold text-gray-500 mb-2">{currentTexts.language}</div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {languages.map((lang) => (
+                                        <button
+                                            key={lang.code}
+                                            onClick={() => {
+                                                setLanguage(lang.code);
+                                                setMenuOpen(false);
+                                            }}
+                                            className={`flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
+                                                language === lang.code 
+                                                    ? 'bg-red-500 text-white' 
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-red-50 hover:text-red-400'
+                                            }`}
+                                        >
+                                            <span>{lang.flag}</span>
+                                            <span>{lang.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             {/* Mobile Navigation Items */}
                             <div className="space-y-1">
                                 <div className="px-3 py-2 text-sm font-semibold text-gray-500 border-b">
