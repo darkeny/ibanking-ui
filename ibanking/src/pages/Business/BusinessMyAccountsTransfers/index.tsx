@@ -1,65 +1,92 @@
-// pages/BusinessNationalTransfers.tsx
+// pages/BusinessMyAccountsTransfers.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BusinessLayout } from '../../../components/BusinessLayout';
 
 interface TransferData {
     fromAccount: string;
-    toNIB: string;
-    toName: string;
+    toAccount: string;
     amount: string;
     description: string;
-    transferCategory: string;
     scheduled: boolean;
     scheduleDate: string;
+    repeatTransfer: boolean;
+    repeatFrequency: string;
+    repeatEndDate: string;
 }
 
-const BusinessNationalTransfers: React.FC = () => {
+const BusinessMyAccountsTransfers: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [transferData, setTransferData] = useState<TransferData>({
         fromAccount: '',
-        toNIB: '',
-        toName: '',
+        toAccount: '',
         amount: '',
         description: '',
-        transferCategory: '',
         scheduled: false,
-        scheduleDate: ''
+        scheduleDate: '',
+        repeatTransfer: false,
+        repeatFrequency: 'monthly',
+        repeatEndDate: ''
     });
     const [showEmailModal, setShowEmailModal] = useState(false);
-    const [showQRModal, setShowQRModal] = useState(false);
-    const [showAPIModal, setShowAPIModal] = useState(false);
     const [emailData, setEmailData] = useState({
         email: '',
-        subject: 'Comprovativo de Transferência Nacional',
+        subject: 'Comprovativo de Transferência entre Contas',
         message: ''
     });
     const [, setEmailSent] = useState(false);
-    const [apiLink, setApiLink] = useState('');
 
     const accounts = [
-        { id: '1', name: 'Conta Principal Empresa', number: 'PT50 1234 5678 9012 3456 7890', balance: 25420.15 },
-        { id: '2', name: 'Conta Operações', number: 'PT50 1234 5678 9012 3456 7891', balance: 125000.75 },
+        { 
+            id: '1', 
+            name: 'Conta Principal Empresa', 
+            number: 'PT50 1234 5678 9012 3456 7890', 
+            balance: 25420.15, 
+            currency: 'MZN',
+            type: 'current'
+        },
+        { 
+            id: '2', 
+            name: 'Conta Operações', 
+            number: 'PT50 1234 5678 9012 3456 7891', 
+            balance: 125000.75, 
+            currency: 'MZN',
+            type: 'current'
+        },
+        { 
+            id: '3', 
+            name: 'Conta Poupança Empresa', 
+            number: 'PT50 1234 5678 9012 3456 7892', 
+            balance: 50000.00, 
+            currency: 'MZN',
+            type: 'savings'
+        },
+        { 
+            id: '4', 
+            name: 'Conta USD Empresa', 
+            number: 'PT50 1234 5678 9012 3456 7893', 
+            balance: 25000.00, 
+            currency: 'USD',
+            type: 'foreign'
+        },
+        { 
+            id: '5', 
+            name: 'Conta EUR Empresa', 
+            number: 'PT50 1234 5678 9012 3456 7894', 
+            balance: 15000.00, 
+            currency: 'EUR',
+            type: 'foreign'
+        },
     ];
 
-    // Categorias de transferência
-    const transferCategories = [
-        { value: 'salario', label: '💼 Pagamento de Salários' },
-        { value: 'fornecedor', label: '🏭 Pagamento a Fornecedores' },
-        { value: 'servicos', label: '🔧 Pagamento de Serviços' },
-        { value: 'impostos', label: '🏛️ Pagamento de Impostos' },
-        { value: 'investimento', label: '📈 Investimentos' },
-        { value: 'emprestimo', label: '💰 Pagamento de Empréstimos' },
-        { value: 'aluguel', label: '🏠 Pagamento de Aluguel' },
-        { value: 'utilidades', label: '⚡ Contas de Utilidades' },
-        { value: 'educacao', label: '🎓 Despesas de Educação' },
-        { value: 'saude', label: '🏥 Despesas de Saúde' },
-        { value: 'viagem', label: '✈️ Despesas de Viagem' },
-        { value: 'marketing', label: '📢 Despesas de Marketing' },
-        { value: 'manutencao', label: '🔧 Manutenção e Reparos' },
-        { value: 'equipamento', label: '💻 Compra de Equipamentos' },
-        { value: 'outros', label: '📦 Outras Transferências' }
+    // Frequências de repetição
+    const repeatFrequencies = [
+        { value: 'daily', label: 'Diariamente' },
+        { value: 'weekly', label: 'Semanalmente' },
+        { value: 'monthly', label: 'Mensalmente' },
+        { value: 'quarterly', label: 'Trimestralmente' },
+        { value: 'yearly', label: 'Anualmente' },
     ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -80,15 +107,51 @@ const BusinessNationalTransfers: React.FC = () => {
 
     const validateStep1 = () => {
         return transferData.fromAccount && 
-               transferData.toNIB && 
-               transferData.toName && 
+               transferData.toAccount && 
                transferData.amount && 
-               transferData.transferCategory &&
+               transferData.fromAccount !== transferData.toAccount &&
                parseFloat(transferData.amount) > 0;
     };
 
     const getTotalAmount = () => {
         return parseFloat(transferData.amount || '0');
+    };
+
+    const getFromAccount = () => {
+        return accounts.find(acc => acc.id === transferData.fromAccount);
+    };
+
+    const getToAccount = () => {
+        return accounts.find(acc => acc.id === transferData.toAccount);
+    };
+
+    const isSameCurrency = () => {
+        const fromAccount = getFromAccount();
+        const toAccount = getToAccount();
+        return fromAccount && toAccount && fromAccount.currency === toAccount.currency;
+    };
+
+    const getExchangeRate = () => {
+        // Taxas de câmbio simuladas
+        const rates: { [key: string]: number } = {
+            'MZN': 1,
+            'USD': 64.5,
+            'EUR': 70.2
+        };
+        return rates;
+    };
+
+    const getConvertedAmount = () => {
+        const fromAccount = getFromAccount();
+        const toAccount = getToAccount();
+        
+        if (!fromAccount || !toAccount || fromAccount.currency === toAccount.currency) {
+            return getTotalAmount();
+        }
+
+        const rates = getExchangeRate();
+        const amountInMZN = getTotalAmount() * rates[fromAccount.currency];
+        return amountInMZN / rates[toAccount.currency];
     };
 
     const handleNext = () => {
@@ -98,7 +161,7 @@ const BusinessNationalTransfers: React.FC = () => {
             // Simular processamento da transferência
             setTimeout(() => {
                 setStep(3);
-            }, 2000);
+            }, 1500);
         }
     };
 
@@ -110,65 +173,81 @@ const BusinessNationalTransfers: React.FC = () => {
         setStep(1);
         setTransferData({
             fromAccount: '',
-            toNIB: '',
-            toName: '',
+            toAccount: '',
             amount: '',
             description: '',
-            transferCategory: '',
             scheduled: false,
-            scheduleDate: ''
+            scheduleDate: '',
+            repeatTransfer: false,
+            repeatFrequency: 'monthly',
+            repeatEndDate: ''
         });
         setEmailSent(false);
         setEmailData({
             email: '',
-            subject: 'Comprovativo de Transferência Nacional',
+            subject: 'Comprovativo de Transferência entre Contas',
             message: ''
         });
     };
 
     const generateTransferReference = () => {
-        return `TRF_NAC_${Date.now()}`;
+        return `TRF_CTA_${Date.now()}`;
     };
 
-    const getCategoryLabel = (value: string) => {
-        const category = transferCategories.find(cat => cat.value === value);
-        return category ? category.label : 'Categoria não especificada';
+    const getFrequencyLabel = (value: string) => {
+        const frequency = repeatFrequencies.find(freq => freq.value === value);
+        return frequency ? frequency.label : 'Não repetir';
     };
 
     const downloadPDFExtract = () => {
         const transferRef = generateTransferReference();
         const totalAmount = getTotalAmount();
+        const fromAccount = getFromAccount();
+        const toAccount = getToAccount();
         
         const pdfContent = `
-            COMPROVATIVO DE TRANSFERÊNCIA NACIONAL
-            ======================================
+            COMPROVATIVO DE TRANSFERÊNCIA ENTRE CONTAS
+            ==========================================
             
             Referência: ${transferRef}
             Data: ${new Date().toLocaleDateString('pt-PT')} ${new Date().toLocaleTimeString('pt-PT')}
             
             CONTA DE ORIGEM:
-            ${accounts.find(acc => acc.id === transferData.fromAccount)?.name}
-            ${accounts.find(acc => acc.id === transferData.fromAccount)?.number}
+            ${fromAccount?.name}
+            ${fromAccount?.number}
+            Saldo antes: ${fromAccount?.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })} ${fromAccount?.currency}
             
-            BENEFICIÁRIO:
-            Nome: ${transferData.toName}
-            NIB: ${transferData.toNIB}
+            CONTA DE DESTINO:
+            ${toAccount?.name}
+            ${toAccount?.number}
+            Saldo antes: ${toAccount?.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })} ${toAccount?.currency}
             
-            VALOR DA TRANSFERÊNCIA:
-            MZN ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+            VALOR TRANSFERIDO:
+            ${fromAccount?.currency} ${totalAmount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
             
-            CATEGORIA:
-            ${getCategoryLabel(transferData.transferCategory)}
+            ${!isSameCurrency() ? `
+            VALOR RECEBIDO:
+            ${toAccount?.currency} ${getConvertedAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+            
+            TAXA DE CÂMBIO:
+            1 ${fromAccount?.currency} = ${(getConvertedAmount() / totalAmount).toLocaleString('pt-PT', { minimumFractionDigits: 4 })} ${toAccount?.currency}
+            ` : ''}
             
             DESCRIÇÃO:
-            ${transferData.description || 'Sem descrição'}
+            ${transferData.description || 'Transferência entre contas próprias'}
             
             ${transferData.scheduled ? `
             DATA PROGRAMADA:
             ${new Date(transferData.scheduleDate).toLocaleDateString('pt-PT')}
             ` : ''}
             
-            ======================================
+            ${transferData.repeatTransfer ? `
+            REPETIÇÃO:
+            ${getFrequencyLabel(transferData.repeatFrequency)}
+            Até: ${transferData.repeatEndDate ? new Date(transferData.repeatEndDate).toLocaleDateString('pt-PT') : 'Indefinidamente'}
+            ` : ''}
+            
+            ==========================================
             Your Bank Business - Luwali Technologies
         `;
 
@@ -176,7 +255,7 @@ const BusinessNationalTransfers: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `comprovativo_transferencia_${transferRef}.pdf`;
+        a.download = `comprovativo_transferencia_contas_${transferRef}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -197,23 +276,6 @@ const BusinessNationalTransfers: React.FC = () => {
             setShowEmailModal(false);
             alert(`Comprovativo enviado com sucesso para: ${emailData.email}`);
         }, 2000);
-    };
-
-    const generateQRCode = () => {
-        setShowQRModal(true);
-    };
-
-    const generateAPILink = () => {
-        const transferRef = generateTransferReference();
-        const link = `https://ibanking-ui.vercel.app/api/transfers/national/${transferRef}`;
-        setApiLink(link);
-        setShowAPIModal(true);
-    };
-
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('Link copiado para a área de transferência!');
-        });
     };
 
     // Componente Modal Reutilizável
@@ -258,8 +320,8 @@ const BusinessNationalTransfers: React.FC = () => {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Transferência Nacional</h1>
-                            <p className="text-gray-600 mt-1">Execute transferências para outras contas nacionais</p>
+                            <h1 className="text-2xl font-bold text-gray-900">Transferência entre Minhas Contas</h1>
+                            <p className="text-gray-600 mt-1">Transfira valores entre as suas contas de forma rápida e segura</p>
                         </div>
                         <button
                             onClick={() => navigate('/panel')}
@@ -309,49 +371,42 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 onChange={handleInputChange}
                                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                             >
-                                                <option value="">Selecione a conta</option>
+                                                <option value="">Selecione a conta de origem</option>
                                                 {accounts.map(account => (
                                                     <option key={account.id} value={account.id}>
-                                                        {account.name} - MZN {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                        {account.name} - {account.currency} {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                                     </option>
                                                 ))}
                                             </select>
                                         </div>
 
-                                        {/* Dados do Beneficiário */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    NIB do Beneficiário *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="toNIB"
-                                                    value={transferData.toNIB}
-                                                    onChange={handleInputChange}
-                                                    placeholder="PT50 XXXX XXXX XXXX XXXX XXXX"
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Nome do Beneficiário *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="toName"
-                                                    value={transferData.toName}
-                                                    onChange={handleInputChange}
-                                                    placeholder="Nome completo do beneficiário"
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                                />
-                                            </div>
+                                        {/* Conta de Destino */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Conta de Destino *
+                                            </label>
+                                            <select
+                                                name="toAccount"
+                                                value={transferData.toAccount}
+                                                onChange={handleInputChange}
+                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                            >
+                                                <option value="">Selecione a conta de destino</option>
+                                                {accounts
+                                                    .filter(account => account.id !== transferData.fromAccount)
+                                                    .map(account => (
+                                                        <option key={account.id} value={account.id}>
+                                                            {account.name} - {account.currency} {account.balance.toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
                                         </div>
 
                                         {/* Valor */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Valor (MZN) *
+                                                Valor *
                                             </label>
                                             <input
                                                 type="number"
@@ -365,28 +420,31 @@ const BusinessNationalTransfers: React.FC = () => {
                                             />
                                         </div>
 
-                                        {/* Categoria da Transferência */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Categoria da Transferência *
-                                            </label>
-                                            <select
-                                                name="transferCategory"
-                                                value={transferData.transferCategory}
-                                                onChange={handleInputChange}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                            >
-                                                <option value="">Selecione a categoria</option>
-                                                {transferCategories.map(category => (
-                                                    <option key={category.value} value={category.value}>
-                                                        {category.label}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <p className="text-sm text-gray-500 mt-1">
-                                                Ajude-nos a entender como o seu valor está sendo usado
-                                            </p>
-                                        </div>
+                                        {/* Conversão de Moeda */}
+                                        {transferData.fromAccount && transferData.toAccount && !isSameCurrency() && (
+                                            <div className="bg-blue-50 rounded-xl p-4">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-blue-700 font-medium">Conversão de Moeda</span>
+                                                    <span className="text-blue-600 text-sm">
+                                                        {getFromAccount()?.currency} → {getToAccount()?.currency}
+                                                    </span>
+                                                </div>
+                                                <div className="mt-2 text-sm text-blue-600">
+                                                    <div className="flex justify-between">
+                                                        <span>Valor enviado:</span>
+                                                        <span>{getFromAccount()?.currency} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between font-semibold">
+                                                        <span>Valor recebido:</span>
+                                                        <span>{getToAccount()?.currency} {getConvertedAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</span>
+                                                    </div>
+                                                    <div className="flex justify-between text-xs mt-1">
+                                                        <span>Taxa de câmbio:</span>
+                                                        <span>1 {getFromAccount()?.currency} = {(getConvertedAmount() / getTotalAmount()).toLocaleString('pt-PT', { minimumFractionDigits: 4 })} {getToAccount()?.currency}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* Descrição */}
                                         <div>
@@ -398,7 +456,7 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 name="description"
                                                 value={transferData.description}
                                                 onChange={handleInputChange}
-                                                placeholder="Descrição da transferência"
+                                                placeholder="Ex: Transferência para poupança, Capitalização, etc."
                                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                             />
                                         </div>
@@ -434,6 +492,57 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 </div>
                                             )}
                                         </div>
+
+                                        {/* Repetição */}
+                                        <div className="space-y-3 p-4 border border-gray-200 rounded-lg">
+                                            <div className="flex items-center space-x-3">
+                                                <input
+                                                    type="checkbox"
+                                                    name="repeatTransfer"
+                                                    checked={transferData.repeatTransfer}
+                                                    onChange={handleInputChange}
+                                                    className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                                                />
+                                                <label className="text-sm font-medium text-gray-700">
+                                                    Repetir esta transferência
+                                                </label>
+                                            </div>
+
+                                            {transferData.repeatTransfer && (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                            Frequência
+                                                        </label>
+                                                        <select
+                                                            name="repeatFrequency"
+                                                            value={transferData.repeatFrequency}
+                                                            onChange={handleInputChange}
+                                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                                                        >
+                                                            {repeatFrequencies.map(freq => (
+                                                                <option key={freq.value} value={freq.value}>
+                                                                    {freq.label}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                            Data de Término
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            name="repeatEndDate"
+                                                            value={transferData.repeatEndDate}
+                                                            onChange={handleInputChange}
+                                                            min={transferData.scheduleDate || new Date().toISOString().split('T')[0]}
+                                                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     <div className="flex space-x-4 pt-6 border-t border-gray-200">
@@ -463,29 +572,27 @@ const BusinessNationalTransfers: React.FC = () => {
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Conta de Origem:</span>
                                             <span className="font-semibold">
-                                                {accounts.find(acc => acc.id === transferData.fromAccount)?.name}
+                                                {getFromAccount()?.name}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-gray-600">Beneficiário:</span>
-                                            <span className="font-semibold">{transferData.toName}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-600">NIB:</span>
-                                            <span className="font-semibold font-mono">{transferData.toNIB}</span>
+                                            <span className="text-gray-600">Conta de Destino:</span>
+                                            <span className="font-semibold">{getToAccount()?.name}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Valor:</span>
                                             <span className="font-semibold text-red-600 text-lg">
-                                                MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                {getFromAccount()?.currency} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-600">Categoria:</span>
-                                            <span className="font-semibold">
-                                                {getCategoryLabel(transferData.transferCategory)}
-                                            </span>
-                                        </div>
+                                        {!isSameCurrency() && (
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-600">Valor recebido:</span>
+                                                <span className="font-semibold text-green-600">
+                                                    {getToAccount()?.currency} {getConvertedAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                </span>
+                                            </div>
+                                        )}
                                         {transferData.description && (
                                             <div className="flex justify-between items-center">
                                                 <span className="text-gray-600">Descrição:</span>
@@ -497,6 +604,15 @@ const BusinessNationalTransfers: React.FC = () => {
                                                 <span className="text-gray-600">Data programada:</span>
                                                 <span className="font-semibold">
                                                     {new Date(transferData.scheduleDate).toLocaleDateString('pt-PT')}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {transferData.repeatTransfer && (
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-600">Repetição:</span>
+                                                <span className="font-semibold">
+                                                    {getFrequencyLabel(transferData.repeatFrequency)}
+                                                    {transferData.repeatEndDate && ` até ${new Date(transferData.repeatEndDate).toLocaleDateString('pt-PT')}`}
                                                 </span>
                                             </div>
                                         )}
@@ -531,8 +647,9 @@ const BusinessNationalTransfers: React.FC = () => {
                                     <div>
                                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Transferência Processada!</h2>
                                         <p className="text-gray-600">
-                                            A transferência para <strong>{transferData.toName}</strong> no valor de{' '}
-                                            <strong>MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</strong> foi processada com sucesso.
+                                            A transferência de <strong>{getFromAccount()?.currency} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}</strong> {' '}
+                                            da conta <strong>{getFromAccount()?.name}</strong> para a conta{' '}
+                                            <strong>{getToAccount()?.name}</strong> foi processada com sucesso.
                                         </p>
                                     </div>
 
@@ -545,14 +662,18 @@ const BusinessNationalTransfers: React.FC = () => {
                                             <span className="text-gray-600">Data:</span>
                                             <span>{new Date().toLocaleDateString('pt-PT')} {new Date().toLocaleTimeString('pt-PT')}</span>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">NIB Destino:</span>
-                                            <span className="font-mono">{transferData.toNIB}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Categoria:</span>
-                                            <span>{getCategoryLabel(transferData.transferCategory)}</span>
-                                        </div>
+                                        {!isSameCurrency() && (
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Conversão:</span>
+                                                <span>{getFromAccount()?.currency} → {getToAccount()?.currency}</span>
+                                            </div>
+                                        )}
+                                        {transferData.scheduled && (
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Tipo:</span>
+                                                <span>Transferência Programada</span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Opções de Comprovativo */}
@@ -591,38 +712,6 @@ const BusinessNationalTransfers: React.FC = () => {
                                                     <div className="text-sm text-gray-600">Receber comprovativo por email</div>
                                                 </div>
                                             </button>
-
-                                            {/* QR Code */}
-                                            <button
-                                                onClick={generateQRCode}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Gerar QR Code</div>
-                                                    <div className="text-sm text-gray-600">Código para partilha rápida</div>
-                                                </div>
-                                            </button>
-
-                                            {/* API Integration */}
-                                            <button
-                                                onClick={generateAPILink}
-                                                className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors text-left"
-                                            >
-                                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-gray-900">Integração API</div>
-                                                    <div className="text-sm text-gray-600">Partilhar dados via API</div>
-                                                </div>
-                                            </button>
                                         </div>
                                     </div>
 
@@ -649,12 +738,13 @@ const BusinessNationalTransfers: React.FC = () => {
                     <div className="lg:col-span-1">
                         {/* Informações Úteis */}
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Vantagens</h3>
                             <div className="space-y-3 text-sm text-gray-600">
-                                <p>• Transferências processadas em tempo real</p>
-                                <p>• Horário de processamento: 24/7</p>
-                                <p>• Limite máximo por transferência: MZN 500.000,00</p>
-                                <p>• Taxas aplicáveis conforme tabela</p>
+                                <p>• Transferência instantânea</p>
+                                <p>• Sem taxas de transferência</p>
+                                <p>• Conversão automática de moeda</p>
+                                <p>• Agendamento e repetição</p>
+                                <p>• Histórico completo</p>
                             </div>
                         </div>
 
@@ -666,26 +756,26 @@ const BusinessNationalTransfers: React.FC = () => {
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Valor:</span>
                                         <span className="font-semibold">
-                                            MZN {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                            {getFromAccount()?.currency} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                         </span>
                                     </div>
-                                    {transferData.transferCategory && (
+                                    {!isSameCurrency() && (
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Categoria:</span>
-                                            <span className="font-semibold text-sm">
-                                                {getCategoryLabel(transferData.transferCategory)}
+                                            <span className="text-gray-600">Recebido:</span>
+                                            <span className="font-semibold">
+                                                {getToAccount()?.currency} {getConvertedAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
                                     )}
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Taxa:</span>
-                                        <span className="font-semibold">MZN 50,00</span>
+                                        <span className="font-semibold text-green-600">Grátis</span>
                                     </div>
                                     <div className="border-t pt-3">
                                         <div className="flex justify-between text-lg">
                                             <span className="font-semibold">Total:</span>
                                             <span className="font-bold text-red-600">
-                                                MZN {(getTotalAmount() + 50).toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
+                                                {getFromAccount()?.currency} {getTotalAmount().toLocaleString('pt-PT', { minimumFractionDigits: 2 })}
                                             </span>
                                         </div>
                                     </div>
@@ -757,77 +847,8 @@ const BusinessNationalTransfers: React.FC = () => {
                     </div>
                 </div>
             </Modal>
-
-            {/* Modal de QR Code */}
-            <Modal isOpen={showQRModal} onClose={() => setShowQRModal(false)} title="QR Code de Partilha">
-                <div className="space-y-4 text-center">
-                    <div className="bg-gray-100 rounded-xl p-8 flex items-center justify-center">
-                        <div className="text-center">
-                            <div className="w-48 h-48 bg-white border-4 border-gray-300 mx-auto mb-4 flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="text-6xl mb-2">📱</div>
-                                    <div className="text-xs text-gray-500">QR Code</div>
-                                </div>
-                            </div>
-                            <p className="text-sm text-gray-600">
-                                Aponte a câmara para ler o código
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-blue-50 rounded-lg p-3">
-                        <p className="text-blue-700 text-sm">
-                            <strong>Link:</strong> https://ibanking-ui.vercel.app/
-                        </p>
-                    </div>
-
-                    <button
-                        onClick={() => copyToClipboard('https://ibanking-ui.vercel.app/')}
-                        className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-                    >
-                        Copiar Link
-                    </button>
-                </div>
-            </Modal>
-
-            {/* Modal de API */}
-            <Modal isOpen={showAPIModal} onClose={() => setShowAPIModal(false)} title="Integração API">
-                <div className="space-y-4">
-                    <div className="bg-purple-50 rounded-lg p-4">
-                        <h4 className="font-semibold text-purple-900 mb-2">Link da API</h4>
-                        <p className="text-purple-700 text-sm break-all bg-white p-2 rounded border">
-                            {apiLink}
-                        </p>
-                    </div>
-
-                    <div className="bg-yellow-50 rounded-lg p-3">
-                        <h4 className="font-semibold text-yellow-900 text-sm mb-1">Como usar:</h4>
-                        <ul className="text-yellow-700 text-xs space-y-1">
-                            <li>• Use este link para integração com sistemas externos</li>
-                            <li>• O link contém todos os dados da transferência</li>
-                            <li>• Compatível com REST API</li>
-                        </ul>
-                    </div>
-
-                    <div className="flex space-x-3">
-                        <button
-                            onClick={() => setShowAPIModal(false)}
-                            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-                        >
-                            Fechar
-                        </button>
-                        <button
-                            onClick={() => copyToClipboard(apiLink)}
-                            className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-                        >
-                            Copiar Link
-                        </button>
-                    </div>
-                </div>
-            </Modal>
-
         </BusinessLayout>
     );
 };
 
-export default BusinessNationalTransfers;
+export default BusinessMyAccountsTransfers;
