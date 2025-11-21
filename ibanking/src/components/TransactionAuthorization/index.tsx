@@ -1,6 +1,5 @@
 // components/TransactionAuthorization.tsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   CiLock,
   CiCircleCheck,
@@ -27,7 +26,6 @@ interface Transaction {
 }
 
 const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ language }) => {
-  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
