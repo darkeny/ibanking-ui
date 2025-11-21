@@ -32,6 +32,12 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'pending' | 'history'>('pending');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{
+    type: 'approve' | 'reject';
+    transactionId: string;
+    reason?: string;
+  } | null>(null);
 
   // Dados de exemplo para transações
   const [transactions, setTransactions] = useState<Transaction[]>([
@@ -107,7 +113,8 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       rejected: 'Rejeitada',
       transfer: 'Transferência',
       payment: 'Pagamento',
-      withdrawal: 'Levantamento'
+      withdrawal: 'Levantamento',
+      actionRequiresAuth: 'Esta ação requer autenticação'
     },
     EN: {
       title: 'Transaction Authorization',
@@ -141,7 +148,8 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
       rejected: 'Rejected',
       transfer: 'Transfer',
       payment: 'Payment',
-      withdrawal: 'Withdrawal'
+      withdrawal: 'Withdrawal',
+      actionRequiresAuth: 'This action requires authentication'
     }
   };
 
@@ -167,14 +175,32 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
     if (password === 'authorize123') {
       setIsAuthenticated(true);
       localStorage.setItem('transactionAuth', 'authenticated');
+      setShowAuthModal(false);
+      
+      // Executar ação pendente após autenticação
+      if (pendingAction) {
+        if (pendingAction.type === 'approve') {
+          handleApprove(pendingAction.transactionId);
+        } else {
+          handleReject(pendingAction.transactionId, pendingAction.reason || '');
+        }
+        setPendingAction(null);
+      }
     } else {
       alert(language === 'PT' ? 'Senha incorreta!' : 'Incorrect password!');
     }
 
     setIsLoading(false);
+    setPassword('');
   };
 
   const handleApprove = (transactionId: string) => {
+    if (!isAuthenticated) {
+      setPendingAction({ type: 'approve', transactionId });
+      setShowAuthModal(true);
+      return;
+    }
+
     setTransactions(prev =>
       prev.map(t =>
         t.id === transactionId
@@ -186,6 +212,12 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
   };
 
   const handleReject = (transactionId: string, reason: string) => {
+    if (!isAuthenticated) {
+      setPendingAction({ type: 'reject', transactionId, reason });
+      setShowAuthModal(true);
+      return;
+    }
+
     setTransactions(prev =>
       prev.map(t =>
         t.id === transactionId
@@ -199,176 +231,172 @@ const TransactionAuthorization: React.FC<TransactionAuthorizationProps> = ({ lan
   const pendingTransactions = transactions.filter(t => t.status === 'pending');
   const historyTransactions = transactions.filter(t => t.status !== 'pending');
 
-  // Conteúdo principal do componente
-  const content = !isAuthenticated ? (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8">
-      <div className="max-w-md w-full mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CiLock size={32} className="text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {t.passwordRequired}
-            </h1>
-            <p className="text-gray-600">
-              {t.enterPassword}
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t.passwordPlaceholder}
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={t.passwordPlaceholder}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleAuthentication()}
-              />
-            </div>
-
-            <div className="flex space-x-3">
-              <button
-                onClick={handleAuthentication}
-                disabled={isLoading || !password}
-                className="flex-1 bg-gradient-to-br from-red-600 to-red-700 text-white py-3 px-4 rounded-lg font-medium hover:from-red-700 hover:to-red-800 disabled:from-red-300 disabled:to-red-400 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                {isLoading ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mx-auto"></div>
-                ) : (
-                  t.authenticate
-                )}
-              </button>
-
-              <button
-                onClick={() => navigate('/business')}
-                className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-              >
-                {t.cancel}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  ) : (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="p-3 bg-gradient-to-br from-red-600 to-red-700 rounded-xl">
-              <CiCircleCheck size={28} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{t.title}</h1>
-              <p className="text-gray-600">{t.subtitle}</p>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              <button
-                onClick={() => setActiveTab('pending')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'pending'
-                    ? 'border-red-500 text-red-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-              >
-                {t.pendingTransactions}
-                {pendingTransactions.length > 0 && (
-                  <span className="ml-2 bg-red-100 text-red-600 py-0.5 px-2 rounded-full text-xs">
-                    {pendingTransactions.length}
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={() => setActiveTab('history')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'history'
-                    ? 'border-red-500 text-red-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-              >
-                {t.transactionHistory}
-              </button>
-            </nav>
-          </div>
-        </div>
-
-        {/* Conteúdo das Tabs */}
-        {activeTab === 'pending' ? (
-          <div className="space-y-6">
-            {pendingTransactions.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-                <CiCircleCheck size={48} className="text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {t.noPendingTransactions}
-                </h3>
-                <p className="text-gray-500">
-                  {language === 'PT'
-                    ? 'Todas as transações foram processadas.'
-                    : 'All transactions have been processed.'
-                  }
-                </p>
-              </div>
-            ) : (
-              pendingTransactions.map(transaction => (
-                <TransactionCard
-                  key={transaction.id}
-                  transaction={transaction}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
-                  language={language}
-                  texts={t}
-                />
-              ))
-            )}
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {historyTransactions.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-                <CiCalendar size={48} className="text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {t.noHistory}
-                </h3>
-                <p className="text-gray-500">
-                  {language === 'PT'
-                    ? 'Nenhuma autorização foi processada ainda.'
-                    : 'No authorizations have been processed yet.'
-                  }
-                </p>
-              </div>
-            ) : (
-              historyTransactions.map(transaction => (
-                <HistoryCard
-                  key={transaction.id}
-                  transaction={transaction}
-                  language={language}
-                  texts={t}
-                />
-              ))
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  // Se não estiver autenticado, mostrar apenas o conteúdo de autenticação
-  // Se estiver autenticado, mostrar dentro do BusinessLayout
-  return isAuthenticated ? (
+  return (
     <BusinessLayout>
-      {content}
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Header */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="flex items-center space-x-4 mb-4">
+              <div className="p-3 bg-gradient-to-br from-red-600 to-red-700 rounded-xl">
+                <CiCircleCheck size={28} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{t.title}</h1>
+                <p className="text-gray-600">{t.subtitle}</p>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('pending')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'pending'
+                      ? 'border-red-500 text-red-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                >
+                  {t.pendingTransactions}
+                  {pendingTransactions.length > 0 && (
+                    <span className="ml-2 bg-red-100 text-red-600 py-0.5 px-2 rounded-full text-xs">
+                      {pendingTransactions.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('history')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'history'
+                      ? 'border-red-500 text-red-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                >
+                  {t.transactionHistory}
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Conteúdo das Tabs */}
+          {activeTab === 'pending' ? (
+            <div className="space-y-6">
+              {pendingTransactions.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                  <CiCircleCheck size={48} className="text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    {t.noPendingTransactions}
+                  </h3>
+                  <p className="text-gray-500">
+                    {language === 'PT'
+                      ? 'Todas as transações foram processadas.'
+                      : 'All transactions have been processed.'
+                    }
+                  </p>
+                </div>
+              ) : (
+                pendingTransactions.map(transaction => (
+                  <TransactionCard
+                    key={transaction.id}
+                    transaction={transaction}
+                    onApprove={handleApprove}
+                    onReject={handleReject}
+                    language={language}
+                    texts={t}
+                  />
+                ))
+              )}
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {historyTransactions.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                  <CiCalendar size={48} className="text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    {t.noHistory}
+                  </h3>
+                  <p className="text-gray-500">
+                    {language === 'PT'
+                      ? 'Nenhuma autorização foi processada ainda.'
+                      : 'No authorizations have been processed yet.'
+                    }
+                  </p>
+                </div>
+              ) : (
+                historyTransactions.map(transaction => (
+                  <HistoryCard
+                    key={transaction.id}
+                    transaction={transaction}
+                    language={language}
+                    texts={t}
+                  />
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modal de Autenticação */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-md w-full">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CiLock size={32} className="text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                {t.passwordRequired}
+              </h1>
+              <p className="text-gray-600">
+                {t.actionRequiresAuth}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t.passwordPlaceholder}
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={t.passwordPlaceholder}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  onKeyPress={(e) => e.key === 'Enter' && handleAuthentication()}
+                />
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={handleAuthentication}
+                  disabled={isLoading || !password}
+                  className="flex-1 bg-gradient-to-br from-red-600 to-red-700 text-white py-3 px-4 rounded-lg font-medium hover:from-red-700 hover:to-red-800 disabled:from-red-300 disabled:to-red-400 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mx-auto"></div>
+                  ) : (
+                    t.authenticate
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowAuthModal(false);
+                    setPendingAction(null);
+                    setPassword('');
+                  }}
+                  className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                >
+                  {t.cancel}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </BusinessLayout>
-  ) : (
-    content
   );
 };
 
@@ -494,7 +522,10 @@ const TransactionCard: React.FC<{
                 {texts.reject}
               </button>
               <button
-                onClick={() => setShowRejectModal(false)}
+                onClick={() => {
+                  setShowRejectModal(false);
+                  setRejectReason('');
+                }}
                 className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 {texts.cancel}
