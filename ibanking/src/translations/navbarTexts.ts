@@ -7,6 +7,12 @@ export const navbarTexts = {
         settings: 'Definições',
         language: 'Idioma',
 
+        // ... traduções existentes ...
+        theme: 'Tema',
+        light: 'Claro',
+        dark: 'Escuro',
+        auto: 'Automático',
+
         // Submenu Particulares
         accounts: "Contas",
         cards: "Cartões",
@@ -37,6 +43,13 @@ export const navbarTexts = {
         about: "About Us",
         settings: 'Settings',
         language: 'Language',
+
+
+        // ... existing translations ...
+        theme: 'Theme',
+        light: 'Light',
+        dark: 'Dark',
+        auto: 'Auto',
 
         // Submenu Personal
         accounts: "Accounts",
@@ -69,6 +82,12 @@ export const navbarTexts = {
         settings: 'Configuración',
         language: 'Idioma',
 
+        // ... traducciones existentes ...
+        theme: 'Tema',
+        light: 'Claro',
+        dark: 'Oscuro',
+        auto: 'Automático',
+
         // Submenu Particulares
         accounts: "Cuentas",
         cards: "Tarjetas",
@@ -99,6 +118,12 @@ export const navbarTexts = {
         about: "À Propos",
         settings: 'Paramètres',
         language: 'Langue',
+
+        // ... traductions existantes ...
+        theme: 'Thème',
+        light: 'Clair',
+        dark: 'Sombre',
+        auto: 'Auto',
 
         // Sous-menu Particuliers
         accounts: "Comptes",
@@ -131,6 +156,12 @@ export const navbarTexts = {
         settings: 'Einstellungen',
         language: 'Sprache',
 
+        // ... bestehende Übersetzungen ...
+        theme: 'Thema',
+        light: 'Hell',
+        dark: 'Dunkel',
+        auto: 'Auto',
+
         // Untermenu Privatkunden
         accounts: "Konten",
         cards: "Karten",
@@ -162,6 +193,12 @@ export const navbarTexts = {
         settings: 'Impostazioni',
         language: 'Lingua',
 
+        // ... traduzioni esistenti ...
+        theme: 'Tema',
+        light: 'Chiaro',
+        dark: 'Scuro',
+        auto: 'Auto',
+
         // Sottomenu Privati
         accounts: "Conti",
         cards: "Carte",
@@ -192,6 +229,12 @@ export const navbarTexts = {
         about: "Over Ons",
         settings: 'Instellingen',
         language: 'Taal',
+
+        // ... bestaande vertalingen ...
+        theme: 'Thema',
+        light: 'Licht',
+        dark: 'Donker',
+        auto: 'Auto',
 
         // Submenu Particulieren
         accounts: "Rekeningen",
